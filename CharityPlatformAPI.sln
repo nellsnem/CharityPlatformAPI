@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37216.2 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CharityPlatformAPI", "CharityPlatformAPI.csproj", "{A431732C-C9D0-4FAF-96F3-758929D4E744}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A431732C-C9D0-4FAF-96F3-758929D4E744}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A431732C-C9D0-4FAF-96F3-758929D4E744}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A431732C-C9D0-4FAF-96F3-758929D4E744}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A431732C-C9D0-4FAF-96F3-758929D4E744}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1A1C67A3-AEF9-4F38-8064-059EC486BC59}
+	EndGlobalSection
+EndGlobal
