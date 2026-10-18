@@ -15,6 +15,7 @@ namespace CharityPlatformAPI.Controllers
             _context = context;
         }
 
+
         // GET: api/Project
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
