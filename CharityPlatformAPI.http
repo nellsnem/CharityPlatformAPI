@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
   "fullName": "Іван Іваненко",
-  "phone": "+3809564354367",
+  "phone": "+3809888367",
   "password": "mypassword123"
 }
 ### Створення нового користувача ПОМИЛКА
@@ -22,7 +22,7 @@ POST https://localhost:7196/api/User/login
 Content-Type: application/json
 
 {
-  "phone": "+3809564354367",
+  "phone": "+38094444367",
   "password": "mypassword123"
 }
 
@@ -46,3 +46,42 @@ Content-Type: application/json
 
 ### Видалення користувача
 DELETE https://localhost:7196/api/User/1
+
+### Перевірка статусу волонтера (чи є користувач з ID 1 волонтером)
+GET https://localhost:7196/api/Volunteer/check/5
+
+### Стати волонтером (для користувача з ID 1)
+POST https://localhost:7196/api/Volunteer
+Content-Type: application/json
+
+{
+  "userId": 2
+}
+
+### Отримання списку всіх ВОЛОНТЕРІВ
+GET https://localhost:7196/api/Volunteer
+
+### Знайти волонтера за ID
+GET https://localhost:7196/api/Volunteer/2
+
+### Оновити рейтинг волонтеру
+PUT https://localhost:7196/api/Volunteer/1
+Content-Type: application/json
+
+{
+  "rating": 5.5
+}
+
+### ЗАБЛОКУВАТИ ВОЛОНТЕРА 
+DELETE https://localhost:7196/api/Volunteer/1
+
+### ПЕРЕВІРИТИ БЛОКУВАННЯ
+GET https://localhost:7196/api/Volunteer/2
+
+### 6. СПРОБА ОБІЙТИ БАН 
+POST https://localhost:7196/api/Volunteer
+Content-Type: application/json
+
+{
+  "userId": 2
+}
