@@ -1,6 +1,48 @@
-@CharityPlatformAPI_HostAddress = http://localhost:5292
+### Створення нового користувача
+POST https://localhost:7196/api/User
+Content-Type: application/json
 
-GET {{CharityPlatformAPI_HostAddress}}/weatherforecast/
-Accept: application/json
+{
+  "fullName": "Іван Іваненко",
+  "phone": "+3809564354367",
+  "password": "mypassword123"
+}
+### Створення нового користувача ПОМИЛКА
+POST https://localhost:7196/api/User
+Content-Type: application/json
 
-###
+{
+  "fullName": "ІВАПВАП",
+  "phone": "+3809243567",
+  "password": "23"
+}
+
+### Вхід у систему (Login)
+POST https://localhost:7196/api/User/login
+Content-Type: application/json
+
+{
+  "phone": "+3809564354367",
+  "password": "mypassword123"
+}
+
+### Отримання списку всіх користувачів
+GET https://localhost:7196/api/User
+
+### Шукаємо існуючого користувача (має повернути Івана без пароля)
+GET https://localhost:7196/api/User/1
+
+### Шукаємо неіснуючого користувача (має повернути помилку 404)
+GET https://localhost:7196/api/User/999
+
+### Оновлення даних користувача
+PUT https://localhost:7196/api/User/1
+Content-Type: application/json
+
+{
+  "fullName": "Іван Оновлений",
+  "phone": "+380990000000"
+}
+
+### Видалення користувача
+DELETE https://localhost:7196/api/User/1
