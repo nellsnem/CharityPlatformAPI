@@ -81,7 +81,7 @@ namespace CharityPlatformAPI.Controllers
 
             if(user == null)
             {
-                return NotFound("Користувача з таким ID не знайдено.");
+                return NotFound(new { message = "Користувача з таким ID не знайдено." });
             }
             var responseDto = new UserAccountResponseDTO
             {
