@@ -1,5 +1,6 @@
 ﻿using CharityPlatformAPI.DTOs;
 using CharityPlatformAPI.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Xml;
@@ -65,9 +66,9 @@ namespace CharityPlatformAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetHelpRequestById(int id)
         {
-            var request  = await _context.HelpRequests.FindAsync(id);
+            var request = await _context.HelpRequests.FindAsync(id);
 
-            if(request == null)
+            if (request == null)
             {
                 return NotFound("Запит з таким ID не знайдено.");
             }
@@ -86,36 +87,48 @@ namespace CharityPlatformAPI.Controllers
             return Ok(responseDto);
         }
         // пошук запиту за ід бенефіціара
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetRequestsByBeneficiaryId(int id, BeneficiaryResponseDTO dto)
+        [HttpGet("beneficiary/{beneficiaryId}")]
+        public async Task<ActionResult> GetRequestsByBeneficiaryId(int beneficiaryId)
         {
-            var request = await _context.Beneficiaries.FindAsync(id);
+            var list = await _context.HelpRequests
+        .Where(x => x.BeneficiaryId == beneficiaryId)
+        .Select(x => new HelpRequestResponseDTO
+        {
+            RequestId = x.RequestId,
+            BeneficiaryId = x.BeneficiaryId,
+            EmployeeId = x.EmployeeId,
+            RegistrationDate = x.RegistrationDate,
+            NeedDescription = x.NeedDescription,
+            DocumentPath = x.DocumentPath,
+            DeliveryAddress = x.DeliveryAddress,
+            Status = x.Status
+        }).ToListAsync();
 
-            if (request == null)
+            return Ok(list);
+        }
+        //оновити статус запиту
+        [HttpPut("{id}/status")]
+        public async Task<ActionResult> UpdateHelpRequestStatus(int id, HelpRequestStatusUpdateDTO dto)
+        {
+            var request = await _context.HelpRequests.FindAsync(id);
+            if(request == null)
             {
-                return NotFound("Запит з таким ID не знайдено.");
+                return NotFound(new { message = "Запит з таким ID не знайдено." });
             }
 
-            var responseDto = new BeneficiaryResponseDTO
+            bool employeeExists = await _context.Employees.AnyAsync(e => e.EmployeeId == dto.EmployeeId);
+            if (!employeeExists)
             {
-                RequestId = request.RequestId,
-                BeneficiaryId = request.BeneficiaryId,
-                EmployeeId = request.EmployeeId,
-                RegistrationDate = request.RegistrationDate,
-                NeedDescription = request.NeedDescription,
-                DocumentPath = request.DocumentPath,
-                DeliveryAddress = request.DeliveryAddress,
-                Status = request.Status
-            };
-            return Ok(responseDto);
+                return BadRequest(new { message = $"Працівника з ID {dto.EmployeeId} не знайдено. Неможливо призначити заявку." });
+            }
+
+            request.Status = dto.Status;
+            request.EmployeeId = dto.EmployeeId;
+
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "Статус запиту успішно оновлено!" });
         }
+
 
     }
 }
-
-/*
-
-GetRequestsByBeneficiaryId (GET beneficiary/{beneficiaryId}): Шукає всі запити, де id_бенефіціара збігається з переданим. Потрібно для особистого кабінету користувача, щоб він бачив історію своїх заявок.   
-
-UpdateHelpRequestStatus (PUT {id}/status): Працівник оновлює статус запиту і записує свій EmployeeId у базу, щоб було видно, хто саме обробив заявку.   
- */

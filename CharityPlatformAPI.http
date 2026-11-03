@@ -103,3 +103,32 @@ Content-Type: application/json
 "userId": 1,
 "passportNumber": "НОВИЙ123456"
 }
+
+###Створити новий запит (від імені бенефіціара)
+POST https://localhost:7196/api/HelpRequest
+Content-Type: application/json
+
+{
+"beneficiaryId": 1,
+"needDescription": "Потрібні продуктові набори та ліки",
+"documentPath": "/docs/passport_scan.pdf",
+"deliveryAddress": "м. Сміла, вул. Соборна, 15"
+}
+
+###Отримати список усіх запитів (для панелі адміністратора/працівника)
+GET https://localhost:7196/api/HelpRequest
+
+###Отримати конкретний запит за ID
+GET https://localhost:7196/api/HelpRequest/1
+
+###Отримати всі запити конкретного бенефіціара (для особистого кабінету)
+GET https://localhost:7196/api/HelpRequest/beneficiary/1
+
+###Оновити статус запиту працівником (взяття в роботу або зміна статусу)
+PUT https://localhost:7196/api/HelpRequest/1/status
+Content-Type: application/json
+
+{
+"employeeId": 1,
+"status": "схвалено"
+}
