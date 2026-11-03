@@ -31,5 +31,4 @@ public partial class Project
 
     public virtual HelpRequest Request { get; set; } = null!;
 
-    public virtual ICollection<VolunteerShift> VolunteerShifts { get; set; } = new List<VolunteerShift>();
 }

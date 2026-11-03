@@ -55,7 +55,7 @@ POST https://localhost:7196/api/Volunteer
 Content-Type: application/json
 
 {
-  "userId": 2
+  "userId": 1
 }
 
 ### Отримання списку всіх ВОЛОНТЕРІВ
@@ -76,12 +76,30 @@ Content-Type: application/json
 DELETE https://localhost:7196/api/Volunteer/1
 
 ### ПЕРЕВІРИТИ БЛОКУВАННЯ
-GET https://localhost:7196/api/Volunteer/2
+GET https://localhost:7196/api/Volunteer/1
 
-### 6. СПРОБА ОБІЙТИ БАН 
+### СПРОБА ОБІЙТИ БАН 
 POST https://localhost:7196/api/Volunteer
 Content-Type: application/json
 
 {
-  "userId": 2
+  "userId": 1
+}
+
+###Заблокувати бенефіціара
+DELETE https://localhost:7196/api/Beneficiary/1
+
+###Перевірити блокування (отримання за ID)
+GET https://localhost:7196/api/Beneficiary/1
+
+###Перевірити статус (для фронтенду за ID користувача)
+GET https://localhost:7196/api/Beneficiary/check/1
+
+###Спроба обійти бан (спроба створити повторно)
+POST https://localhost:7196/api/Beneficiary
+Content-Type: application/json
+
+{
+"userId": 1,
+"passportNumber": "НОВИЙ123456"
 }

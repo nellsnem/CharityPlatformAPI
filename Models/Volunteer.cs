@@ -15,5 +15,4 @@ public partial class Volunteer
     public virtual UserAccount User { get; set; } = null!;
     [Column("status")]
     public string Status { get; set; } = null!;
-    public virtual ICollection<VolunteerShift> VolunteerShifts { get; set; } = new List<VolunteerShift>();
 }
