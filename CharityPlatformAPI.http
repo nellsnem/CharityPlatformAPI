@@ -132,3 +132,30 @@ Content-Type: application/json
 "employeeId": 1,
 "status": "схвалено"
 }
+
+###Створити нового працівника (реєстрація менеджера)
+POST https://localhost:7196/api/Employee
+Content-Type: application/json
+
+{
+"fullName": "Іваненко Іван Іванович",
+"position": "Менеджер проєктів",
+"contactPhone": "+380501234567",
+"login": "ivan_manager",
+"password": "SuperSecretPassword123"
+}
+
+###Отримати список усіх працівників (для панелі адміністратора)
+GET https://localhost:7196/api/Employee
+
+###Отримати конкретного працівника за ID
+GET https://localhost:7196/api/Employee/1
+
+###Оновити телефон та посаду працівника
+PUT https://localhost:7196/api/Employee/1
+Content-Type: application/json
+
+{
+"position": "Старший менеджер",
+"contactPhone": "+380991112233"
+}
