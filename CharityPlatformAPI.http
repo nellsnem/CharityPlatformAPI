@@ -159,3 +159,68 @@ Content-Type: application/json
 "position": "Старший менеджер",
 "contactPhone": "+380991112233"
 }
+
+
+###Створити проєкт
+POST https://localhost:7196/api/Project
+Content-Type: application/json
+
+{
+"helpRequestId": 1,
+"employeeId": 1,
+"title": "Закупівля зимового одягу",
+"description": "Забезпечення теплим одягом переселенців",
+"approvedBudget": 50000.00,
+"startDate": "2026-11-05",
+"endDate": null
+}
+
+###Отримати всі проєкти
+GET https://localhost:7196/api/Project
+
+###Отримати проєкт за ID
+GET https://localhost:7196/api/Project/1
+
+###Отримати всі проєкти конкретного працівника
+GET https://localhost:7196/api/Project/employee/1
+
+### Закрити проєкт
+PUT https://localhost:7196/api/Project/1
+Content-Type: application/json
+
+{
+  "endDate": "2026-12-01"
+}
+
+###Створити захід
+POST https://localhost:7196/api/Event
+Content-Type: application/json
+
+{
+"projectId": 1,
+"employeeId": 1,
+"title": "Роздача курток у центрі",
+"eventDate": "2026-11-10T14:00:00",
+"location": "м. Черкаси, вул. Хрещатик, 25",
+"description": "Потрібно 5 волонтерів для розвантаження"
+}
+
+###Отримати всі заходи
+GET https://localhost:7196/api/Event
+
+###Отримати захід за ID
+GET https://localhost:7196/api/Event/1
+
+###Отримати всі заходи конкретного проєкту
+GET https://localhost:7196/api/Event/project/1
+
+###Оновити дані заходу
+PUT https://localhost:7196/api/Event/1
+Content-Type: application/json
+
+{
+"title": "Роздача курток (ЗМІНА ЧАСУ)",
+"eventDate": "2026-11-10T16:00:00",
+"location": "м. Черкаси, вул. Хрещатик, 25",
+"description": "Час змінено, потрібно 7 волонтерів"
+}

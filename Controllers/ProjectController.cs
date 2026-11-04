@@ -109,6 +109,7 @@ namespace CharityPlatformAPI.Controllers
 
             return Ok(projects);
         }
+        // ЗАКРИТИ ПРОЄКТ (встановлення дати та статусу "завершено")
         [HttpPut("{id}")]
         public async Task<ActionResult> CompleteProject(int id, ProjectUpdateDTO dto)
         {
