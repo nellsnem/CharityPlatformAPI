@@ -224,3 +224,31 @@ Content-Type: application/json
 "location": "м. Черкаси, вул. Хрещатик, 25",
 "description": "Час змінено, потрібно 7 волонтерів"
 }
+
+### Зареєструвати волонтера
+POST https://localhost:7196/api/VolunteerParticipation
+Content-Type: application/json
+
+{
+  "eventId": 1,
+  "volunteerId": 1,
+  "employeeId": 1
+}
+
+### Отримати весь список
+GET https://localhost:7196/api/VolunteerParticipation
+
+### Отримати запис за ID
+GET https://localhost:7196/api/VolunteerParticipation/2
+
+### Отримати список волонтерів конкретного заходу
+GET https://localhost:7196/api/VolunteerParticipation/event/1
+
+### Оновити статус та години
+PUT https://localhost:7196/api/VolunteerParticipation/2
+Content-Type: application/json
+
+{
+  "statusPresence": "відпрацював",
+  "hoursWorked": 4.5
+}
