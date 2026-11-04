@@ -252,3 +252,26 @@ Content-Type: application/json
   "statusPresence": "відпрацював",
   "hoursWorked": 4.5
 }
+
+### Створити транзакцію (надходження коштів)
+POST https://localhost:7196/api/Finance
+Content-Type: application/json
+
+{
+  "projectId": 1,
+  "contractId": null,
+  "employeeId": 1,
+  "amount": 50000.00,
+  "type": "надходження",
+  "purpose": "Благодійний внесок на куртки",
+  "transactionDate": "2026-11-15"
+}
+
+### Отримати всі транзакції
+GET https://localhost:7196/api/Finance
+
+### Отримати транзакцію за ID
+GET https://localhost:7196/api/Finance/1
+
+### Отримати всі транзакції конкретного проєкту
+GET https://localhost:7196/api/Finance/project/1
