@@ -19,8 +19,8 @@ namespace CharityPlatformAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateProject(ProjectCreateDTO dto)
         {
-            var requestExists = await _context.HelpRequests.AnyAsync(r => r.RequestId == dto.HelpRequestId);
-            if (!requestExists)
+            var helpRequest = await _context.HelpRequests.FindAsync(dto.HelpRequestId);
+            if (helpRequest == null)
             {
                 return BadRequest(new { message = $"Запит на допомогу з ID {dto.HelpRequestId} не знайдено в базі!" });
             }
@@ -29,6 +29,11 @@ namespace CharityPlatformAPI.Controllers
             if (existingProject != null)
             {
                 return BadRequest(new { message = "Для цього запиту на допомогу вже створено проєкт!" });
+            }
+            if (helpRequest.Status == "нове")
+            {
+                helpRequest.Status = "схвалено";
+                helpRequest.EmployeeId = dto.EmployeeId; // Фіксуємо, який менеджер взявся за справу
             }
 
             var newProject = new Project

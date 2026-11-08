@@ -66,8 +66,10 @@ namespace CharityPlatformAPI.Controllers
             var list = await _context.Beneficiaries
                 .Select(b => new BeneficiaryResponseDTO
                 {
+                    BeneficiaryId = b.BeneficiaryId,
                     UserId = b.UserId,
                     PassportNumber = b.PassportNumber,
+                    Status = b.Status
                 }).ToListAsync();
 
             return Ok(list);

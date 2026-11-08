@@ -3,8 +3,8 @@ POST https://localhost:7196/api/User
 Content-Type: application/json
 
 {
-  "fullName": "Іван Іваненко",
-  "phone": "+3809888367",
+  "fullName": "ТЕСТ2 ВОЛОНТЕР",
+  "phone": "+3859888567",
   "password": "mypassword123"
 }
 ### Створення нового користувача ПОМИЛКА
@@ -55,11 +55,15 @@ POST https://localhost:7196/api/Volunteer
 Content-Type: application/json
 
 {
-  "userId": 1
+  "userId": 3
 }
 
 ### Отримання списку всіх ВОЛОНТЕРІВ
 GET https://localhost:7196/api/Volunteer
+
+### Отримання списку всіх БЕНЕФЕЦІАРІВ
+GET https://localhost:7196/api/Beneficiary
+
 
 ### Знайти волонтера за ID
 GET https://localhost:7196/api/Volunteer/2
@@ -109,8 +113,8 @@ POST https://localhost:7196/api/Beneficiary
 Content-Type: application/json
 
 {
-  "userId": 1,
-  "passportNumber": "НВ987654"
+  "userId": 2,
+  "passportNumber": "НВ9847654"
 }
 
 ###Створити новий запит (від імені бенефіціара)
@@ -118,7 +122,7 @@ POST https://localhost:7196/api/HelpRequest
 Content-Type: application/json
 
 {
-"beneficiaryId": 1,
+"beneficiaryId": 2,
 "needDescription": "тест",
 "documentPath": "/docs/passport_scan.pdf",
 "deliveryAddress": "м. Сміла, вул. Соборна, 15"
@@ -147,10 +151,10 @@ POST https://localhost:7196/api/Employee
 Content-Type: application/json
 
 {
-"fullName": "Іваненко Іван Іванович",
+"fullName": "ТЕСТ ПРАЦІВНИК",
 "position": "Менеджер проєктів",
-"contactPhone": "+380501234567",
-"login": "ivan_manager",
+"contactPhone": "+380533234567",
+"login": "ivan_BHager",
 "password": "SuperSecretPassword123"
 }
 
@@ -170,13 +174,22 @@ Content-Type: application/json
 }
 
 
+### Оновити статус запиту (Взяти в роботу / Схвалити)
+PUT https://localhost:7196/api/HelpRequest/1/status
+Content-Type: application/json
+
+{
+  "status": "схвалено",
+  "employeeId": 1
+}
+
 ###Створити проєкт
 POST https://localhost:7196/api/Project
 Content-Type: application/json
 
 {
-  "helpRequestId": 1,
-  "employeeId": 1,
+  "helpRequestId": 2,
+  "employeeId": 2,
   "title": "Збір на аптечки",
   "description": "Терміновий збір",
   "approvedBudget": 10000,
@@ -188,7 +201,7 @@ Content-Type: application/json
 GET https://localhost:7196/api/Project
 
 ###Отримати проєкт за ID
-GET https://localhost:7196/api/Project/8
+GET https://localhost:7196/api/Project/3
 
 ###Отримати всі проєкти конкретного працівника
 GET https://localhost:7196/api/Project/employee/1
@@ -206,7 +219,7 @@ POST https://localhost:7196/api/Event
 Content-Type: application/json
 
 {
-"projectId": 2,
+"projectId": 3,
 "employeeId": 1,
 "title": "Роздача курток у центрі",
 "eventDate": "2026-11-10T14:00:00",
@@ -239,7 +252,7 @@ POST https://localhost:7196/api/VolunteerParticipation
 Content-Type: application/json
 
 {
-  "eventId": 1,
+  "eventId": 3,
   "volunteerId": 1,
   "employeeId": 1
 }
@@ -267,11 +280,11 @@ POST https://localhost:7196/api/Finance
 Content-Type: application/json
 
 {
-  "projectId": 2,
-  "contractId": null,
+  "projectId": 3,
+  "contractId": 2,
   "employeeId": 1,
   "amount": 10000.00,
-  "type": "надходження",
+  "type": "витрата",
   "purpose": "Благодійний внесок на куртки",
   "transactionDate": "2026-11-15"
 }
@@ -286,7 +299,7 @@ GET https://localhost:7196/api/Finance/1
 GET https://localhost:7196/api/Finance/project/1
 
 ### 1. Завершення заходу (Відмітка волонтера як присутнього)
-PUT https://localhost:7196/api/VolunteerParticipation/7
+PUT https://localhost:7196/api/VolunteerParticipation/8
 Content-Type: application/json
 
 {
@@ -295,7 +308,7 @@ Content-Type: application/json
 }
 
 ### 2. Закриття проєкту в цілому (Остаточний статус "завершено")
-PUT https://localhost:7196/api/Project/2
+PUT https://localhost:7196/api/Project/3
 Content-Type: application/json
 
 {
@@ -308,8 +321,8 @@ POST https://localhost:7196/api/Supplier
 Content-Type: application/json
 
 {
-  "companyName": "ТОВ МедПостач",
-  "edrpouCode": "12345678",
+  "companyName": "ТЕСТ",
+  "edrpouCode": "123456908",
   "contacts": "м. Черкаси, вул. Смілянська, 10, тел: +380472123456"
 }
 
@@ -328,8 +341,8 @@ POST https://localhost:7196/api/Contract
 Content-Type: application/json
 
 {
-  "supplierId": 1,
-  "projectId": 2,
+  "supplierId": 2,
+  "projectId": 3,
   "signingDate": "2026-11-10",
   "subject": "Закупівля тактичних аптечок для волонтерів",
   "quantity": 50,
@@ -337,14 +350,14 @@ Content-Type: application/json
 }
 
 ### 4. ЗАКРИТИ ДОГОВІР (Зміна статусу на "виконано")
-PUT https://localhost:7196/api/Contract/1/status
+PUT https://localhost:7196/api/Contract/3/status
 Content-Type: application/json
 
 {
   "status": "виконано"
 }
 
-  ### ПОСТАЧАЛЬНИКИ
+### ПОСТАЧАЛЬНИКИ
 
 ### 1. Переглянути всіх постачальників
 GET https://localhost:7196/api/Supplier
