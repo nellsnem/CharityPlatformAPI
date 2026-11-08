@@ -33,7 +33,7 @@ namespace CharityPlatformAPI.Controllers
             if (helpRequest.Status == "нове")
             {
                 helpRequest.Status = "схвалено";
-                helpRequest.EmployeeId = dto.EmployeeId; // Фіксуємо, який менеджер взявся за справу
+                helpRequest.EmployeeId = dto.EmployeeId; 
             }
 
             var newProject = new Project
