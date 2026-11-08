@@ -301,3 +301,66 @@ Content-Type: application/json
 {
   "endDate": "2026-11-15"
 }
+
+
+### 1. СТВОРИТИ ПОСТАЧАЛЬНИКА
+POST https://localhost:7196/api/Supplier
+Content-Type: application/json
+
+{
+  "companyName": "ТОВ МедПостач",
+  "edrpouCode": "12345678",
+  "contacts": "м. Черкаси, вул. Смілянська, 10, тел: +380472123456"
+}
+
+### 2. ОНОВИТИ ДАНІ ПОСТАЧАЛЬНИКА (якщо потрібно)
+PUT https://localhost:7196/api/Supplier/1
+Content-Type: application/json
+
+{
+  "companyName": "ТОВ МедПостач Плюс",
+  "edrpouCode": "12345678",
+  "contacts": "м. Черкаси, вул. Смілянська, 15, email: info@med.com"
+}
+
+### 3. СТВОРИТИ ДОГОВІР (Укладання угоди)
+POST https://localhost:7196/api/Contract
+Content-Type: application/json
+
+{
+  "supplierId": 1,
+  "projectId": 2,
+  "signingDate": "2026-11-10",
+  "subject": "Закупівля тактичних аптечок для волонтерів",
+  "quantity": 50,
+  "amount": 10000.00
+}
+
+### 4. ЗАКРИТИ ДОГОВІР (Зміна статусу на "виконано")
+PUT https://localhost:7196/api/Contract/1/status
+Content-Type: application/json
+
+{
+  "status": "виконано"
+}
+
+  ### ПОСТАЧАЛЬНИКИ
+
+### 1. Переглянути всіх постачальників
+GET https://localhost:7196/api/Supplier
+
+### 2. Знайти конкретного постачальника за його ID
+GET https://localhost:7196/api/Supplier/1
+
+
+### ДОГОВОРИ
+
+### 3. Переглянути всі договори фонду
+GET https://localhost:7196/api/Contract
+
+### 4. Знайти конкретний договір за його ID
+GET https://localhost:7196/api/Contract/1
+
+### 5. Переглянути всі договори для конкретного проєкту (Звітність)
+# Замість "1" вкажи ID проєкту, щоб побачити всі закупівлі по ньому
+GET https://localhost:7196/api/Contract/project/2

@@ -20,6 +20,21 @@ namespace CharityPlatformAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateEvent(EventCreateDTO dto)
         {
+
+            var project = await _context.Projects.FindAsync(dto.ProjectId);
+            if (project == null)
+            {
+                return NotFound(new { message = "Проєкт не знайдено." });
+            }
+
+            bool hasPendingContracts = await _context.Contracts
+                .AnyAsync(c => c.ProjectId == dto.ProjectId && c.Status == "чинний");
+
+            if (hasPendingContracts)
+            {
+                return BadRequest(new { message = "Неможливо створити захід! По цьому проєкту є незавершені закупівлі. Дочекайтеся виконання всіх договорів (статус 'виконано')." });
+            }
+
             var newEvent = new Event
             {
                 ProjectId = dto.ProjectId,
@@ -31,16 +46,13 @@ namespace CharityPlatformAPI.Controllers
             };
 
             _context.Events.Add(newEvent);
-            await _context.SaveChangesAsync();
-
-            var project = await _context.Projects.FindAsync(dto.ProjectId);
-            if (project != null && (project.Status == "зібрано" || project.Status == "активний"))
+            if (project.Status == "зібрано" || project.Status == "активний")
             {
                 project.Status = "захід";
-                await _context.SaveChangesAsync();
             }
+            await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Захід успішно створено, а статус проєкту змінено на 'захід'!" });
+            return Ok(new { message = "Захід успішно створено! Товар в наявності, статус проєкту змінено на 'захід'." });
         }
 
         // ЗНАЙТИ ВСІ ЗАХОДИ
