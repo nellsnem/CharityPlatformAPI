@@ -16,7 +16,7 @@ namespace CharityPlatformAPI.Controllers
             _context = context;
         }
 
-        // СТВОРИТИ ЗАХІД
+        // СТВОРИТИ ЗАХІД 
         [HttpPost]
         public async Task<ActionResult> CreateEvent(EventCreateDTO dto)
         {
@@ -33,7 +33,14 @@ namespace CharityPlatformAPI.Controllers
             _context.Events.Add(newEvent);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Захід успішно створено!" });
+            var project = await _context.Projects.FindAsync(dto.ProjectId);
+            if (project != null && (project.Status == "зібрано" || project.Status == "активний"))
+            {
+                project.Status = "захід";
+                await _context.SaveChangesAsync();
+            }
+
+            return Ok(new { message = "Захід успішно створено, а статус проєкту змінено на 'захід'!" });
         }
 
         // ЗНАЙТИ ВСІ ЗАХОДИ
@@ -41,6 +48,7 @@ namespace CharityPlatformAPI.Controllers
         public async Task<ActionResult> GetAllEvents()
         {
             var list = await _context.Events
+                .Include(e => e.Project) 
                 .Select(x => new EventResponseDTO
                 {
                     EventId = x.EventId,
@@ -49,7 +57,8 @@ namespace CharityPlatformAPI.Controllers
                     Title = x.Title,
                     EventDate = x.EventDate,
                     Location = x.Location,
-                    Description = x.Description
+                    Description = x.Description,
+                    ProjectStatus = x.Project != null ? x.Project.Status : null
                 }).ToListAsync();
 
             return Ok(list);
@@ -59,7 +68,9 @@ namespace CharityPlatformAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetEventById(int id)
         {
-            var ev = await _context.Events.FindAsync(id);
+            var ev = await _context.Events
+                .Include(e => e.Project)
+                .FirstOrDefaultAsync(e => e.EventId == id);
 
             if (ev == null)
             {
@@ -74,7 +85,8 @@ namespace CharityPlatformAPI.Controllers
                 Title = ev.Title,
                 EventDate = ev.EventDate,
                 Location = ev.Location,
-                Description = ev.Description
+                Description = ev.Description,
+                ProjectStatus = ev.Project != null ? ev.Project.Status : null
             };
 
             return Ok(responseDto);
@@ -85,6 +97,7 @@ namespace CharityPlatformAPI.Controllers
         public async Task<ActionResult> GetEventsByProjectId(int projectId)
         {
             var events = await _context.Events
+                .Include(e => e.Project) 
                 .Where(e => e.ProjectId == projectId)
                 .Select(x => new EventResponseDTO
                 {
@@ -94,7 +107,8 @@ namespace CharityPlatformAPI.Controllers
                     Title = x.Title,
                     EventDate = x.EventDate,
                     Location = x.Location,
-                    Description = x.Description
+                    Description = x.Description,
+                    ProjectStatus = x.Project != null ? x.Project.Status : null
                 }).ToListAsync();
 
             if (events.Count == 0)
@@ -125,4 +139,3 @@ namespace CharityPlatformAPI.Controllers
         }
     }
 }
-

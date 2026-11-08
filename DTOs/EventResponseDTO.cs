@@ -9,5 +9,7 @@
         public DateTime EventDate { get; set; }
         public string Location { get; set; } = null!;
         public string? Description { get; set; }
+
+        public string? ProjectStatus { get; set; }
     }
 }

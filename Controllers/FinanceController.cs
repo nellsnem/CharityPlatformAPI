@@ -32,10 +32,9 @@ namespace CharityPlatformAPI.Controllers
             };
 
             _context.FinanceTransactions.Add(transaction);
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
 
-            
-            if (dto.ProjectId.HasValue && dto.Type.ToLower() == "надходження") 
+            if (dto.ProjectId.HasValue && dto.Type.ToLower() == "надходження")
             {
                 var project = await _context.Projects.FindAsync(dto.ProjectId.Value);
                 if (project != null && project.Status != "завершено")
@@ -46,12 +45,10 @@ namespace CharityPlatformAPI.Controllers
 
                     if (totalIncome >= project.ApprovedBudget)
                     {
-                        project.Status = "завершено";
-                        project.EndDate = DateOnly.FromDateTime(DateTime.UtcNow);
+                        project.Status = "зібрано"; 
 
-                        await _context.SaveChangesAsync(); 
-
-                        return Ok(new { message = $"Транзакцію додано! Бюджет зібрано ({totalIncome}/{project.ApprovedBudget}). Проєкт автоматично закрито!" });
+                        await _context.SaveChangesAsync();
+                        return Ok(new { message = $"Транзакцію додано! Бюджет зібрано. Проєкт перейшов у статус 'зібрано'." });
                     }
                 }
             }

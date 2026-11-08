@@ -126,11 +126,19 @@ namespace CharityPlatformAPI.Controllers
                 return NotFound("Користувача з таким ID не знайдено.");
             }
 
+            bool isVolunteer = await _context.Volunteers.AnyAsync(v => v.UserId == id);
+            bool isBeneficiary = await _context.Beneficiaries.AnyAsync(b => b.UserId == id);
+
+            if (isVolunteer || isBeneficiary)
+            {
+                return BadRequest(new { message = "Цього користувача не можна видалити, оскільки він є волонтером або бенефіціаром. Будь ласка, заблокуйте його обліковий запис у відповідному розділі." });
+            }
+
             _context.UserAccounts.Remove(user);
 
             await _context.SaveChangesAsync();
 
-            return Ok("Дані користувача успішно видалено!");
+            return Ok(new { message = "Дані користувача успішно видалено!" });
         }
         
     }

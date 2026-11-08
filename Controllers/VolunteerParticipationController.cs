@@ -25,7 +25,7 @@ namespace CharityPlatformAPI.Controllers
                 EventId = dto.EventId,
                 VolunteerId = dto.VolunteerId,
                 EmployeeId = dto.EmployeeId,
-                StatusPresence = "записався",
+                StatusPresence = "зареєстровано",
                 HoursWorked = 0
             };
 

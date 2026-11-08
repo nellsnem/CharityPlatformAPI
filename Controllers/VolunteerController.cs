@@ -105,7 +105,7 @@ namespace CharityPlatformAPI.Controllers
         }
         //заблокувати волонтера
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteVolonteer(int id)
+        public async Task<ActionResult> DeleteVolunteer(int id)
         {
             var volunteer = await _context.Volunteers.FindAsync(id);
             if(volunteer == null)

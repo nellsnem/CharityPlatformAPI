@@ -104,13 +104,22 @@ Content-Type: application/json
 "passportNumber": "НОВИЙ123456"
 }
 
+### 2. Створити бенефіціара (Прив'язка паспорта до користувача)
+POST https://localhost:7196/api/Beneficiary
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "passportNumber": "НВ987654"
+}
+
 ###Створити новий запит (від імені бенефіціара)
 POST https://localhost:7196/api/HelpRequest
 Content-Type: application/json
 
 {
 "beneficiaryId": 1,
-"needDescription": "Потрібні продуктові набори та ліки",
+"needDescription": "тест",
 "documentPath": "/docs/passport_scan.pdf",
 "deliveryAddress": "м. Сміла, вул. Соборна, 15"
 }
@@ -166,20 +175,20 @@ POST https://localhost:7196/api/Project
 Content-Type: application/json
 
 {
-"helpRequestId": 1,
-"employeeId": 1,
-"title": "Закупівля зимового одягу",
-"description": "Забезпечення теплим одягом переселенців",
-"approvedBudget": 50000.00,
-"startDate": "2026-11-05",
-"endDate": null
+  "helpRequestId": 1,
+  "employeeId": 1,
+  "title": "Збір на аптечки",
+  "description": "Терміновий збір",
+  "approvedBudget": 10000,
+  "startDate": "2026-11-10",
+  "endDate": null
 }
 
 ###Отримати всі проєкти
 GET https://localhost:7196/api/Project
 
 ###Отримати проєкт за ID
-GET https://localhost:7196/api/Project/1
+GET https://localhost:7196/api/Project/8
 
 ###Отримати всі проєкти конкретного працівника
 GET https://localhost:7196/api/Project/employee/1
@@ -197,7 +206,7 @@ POST https://localhost:7196/api/Event
 Content-Type: application/json
 
 {
-"projectId": 1,
+"projectId": 2,
 "employeeId": 1,
 "title": "Роздача курток у центрі",
 "eventDate": "2026-11-10T14:00:00",
@@ -209,7 +218,7 @@ Content-Type: application/json
 GET https://localhost:7196/api/Event
 
 ###Отримати захід за ID
-GET https://localhost:7196/api/Event/1
+GET https://localhost:7196/api/Event/5
 
 ###Отримати всі заходи конкретного проєкту
 GET https://localhost:7196/api/Event/project/1
@@ -258,10 +267,10 @@ POST https://localhost:7196/api/Finance
 Content-Type: application/json
 
 {
-  "projectId": 1,
+  "projectId": 2,
   "contractId": null,
   "employeeId": 1,
-  "amount": 50000.00,
+  "amount": 10000.00,
   "type": "надходження",
   "purpose": "Благодійний внесок на куртки",
   "transactionDate": "2026-11-15"
@@ -275,3 +284,20 @@ GET https://localhost:7196/api/Finance/1
 
 ### Отримати всі транзакції конкретного проєкту
 GET https://localhost:7196/api/Finance/project/1
+
+### 1. Завершення заходу (Відмітка волонтера як присутнього)
+PUT https://localhost:7196/api/VolunteerParticipation/7
+Content-Type: application/json
+
+{
+  "statusPresence": "був присутній",
+  "hoursWorked": 4.5
+}
+
+### 2. Закриття проєкту в цілому (Остаточний статус "завершено")
+PUT https://localhost:7196/api/Project/2
+Content-Type: application/json
+
+{
+  "endDate": "2026-11-15"
+}

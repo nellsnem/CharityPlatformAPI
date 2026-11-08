@@ -28,5 +28,7 @@ namespace CharityPlatformAPI.Models
 
         [Column("description")]
         public string? Description { get; set; }
+
+        public virtual Project? Project { get; set; }
     }
 }

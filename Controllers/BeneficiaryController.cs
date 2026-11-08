@@ -146,7 +146,7 @@ namespace CharityPlatformAPI.Controllers
             var responseDto = new BeneficiaryResponseDTO
             {
                 BeneficiaryId = beneficiary.BeneficiaryId,
-                UserId = beneficiary.BeneficiaryId,
+                UserId = beneficiary.UserId,
                 PassportNumber = beneficiary.PassportNumber,
                 Status = beneficiary.Status,
 
