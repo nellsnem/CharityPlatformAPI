@@ -78,20 +78,23 @@ namespace CharityPlatformAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetBeneficiaryById(int id)
         {
-            var beneficiary = await _context.Beneficiaries.FindAsync(id);
-            if (beneficiary == null)
-            {
-                return NotFound("Бенефеціара з таким ID не знайдено.");
+            var result = await (from b in _context.Beneficiaries
+                                join u in _context.UserAccounts on b.UserId equals u.UserId
+                                where b.BeneficiaryId == id
+                                select new
+                                {
+                                    beneficiaryId = b.BeneficiaryId,
+                                    fullName = u.FullName,
+                                    contactPhone = u.Phone,
+                                    status = b.Status
+                                }).FirstOrDefaultAsync();
 
+            if (result == null)
+            {
+                return NotFound(new { message = "Бенефіціара не знайдено." });
             }
-            var responseDto = new BeneficiaryResponseDTO
-            {
-                UserId = beneficiary.UserId,
-                PassportNumber = beneficiary.PassportNumber,
-                Status = beneficiary.Status
 
-            };
-            return Ok(responseDto);
+            return Ok(result);
         }
         //ОНОВИТИ ПАСПОРТНІ ДАНІ
         [HttpPut("{id}")]

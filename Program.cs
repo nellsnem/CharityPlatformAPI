@@ -32,6 +32,9 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseDefaultFiles(); // ўоб сервер сам шукав index.html
+app.UseStaticFiles();  // ўоб дозволив читати файли з wwwroot
+
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

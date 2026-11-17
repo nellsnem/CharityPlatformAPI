@@ -16,6 +16,7 @@ namespace CharityPlatformAPI.Controllers
         {
             _context = context;
         }
+
         //Створює новий запис
         [HttpPost]
         public async Task<ActionResult> CreateHelpRequest(HelpRequestCreateDTO dto)
@@ -43,10 +44,12 @@ namespace CharityPlatformAPI.Controllers
             return Ok(new { message = "Запит успішно створено!" });
 
         }
+
         //ПОКАЗУЄ СПИСОК ЗАПИТІВ
         [HttpGet]
         public async Task<ActionResult> GetAllHelpRequests()
         {
+            // ОНОВЛЕННЯ: Додано підзапит для отримання ProjectId
             var list = await _context.HelpRequests
                 .Select(x => new HelpRequestResponseDTO
                 {
@@ -57,11 +60,12 @@ namespace CharityPlatformAPI.Controllers
                     NeedDescription = x.NeedDescription,
                     DocumentPath = x.DocumentPath,
                     DeliveryAddress = x.DeliveryAddress,
-                    Status = x.Status
-
+                    Status = x.Status,
+                    ProjectId = _context.Projects.Where(p => p.RequestId == x.RequestId).Select(p => p.ProjectId).FirstOrDefault()
                 }).ToListAsync();
             return Ok(list);
         }
+
         // пошук запиту за ід
         [HttpGet("{id}")]
         public async Task<ActionResult> GetHelpRequestById(int id)
@@ -73,6 +77,12 @@ namespace CharityPlatformAPI.Controllers
                 return NotFound("Запит з таким ID не знайдено.");
             }
 
+            // ОНОВЛЕННЯ: Додано пошук ProjectId
+            var projectId = await _context.Projects
+                .Where(p => p.RequestId == request.RequestId)
+                .Select(p => p.ProjectId)
+                .FirstOrDefaultAsync();
+
             var responseDto = new HelpRequestResponseDTO
             {
                 RequestId = request.RequestId,
@@ -82,36 +92,42 @@ namespace CharityPlatformAPI.Controllers
                 NeedDescription = request.NeedDescription,
                 DocumentPath = request.DocumentPath,
                 DeliveryAddress = request.DeliveryAddress,
-                Status = request.Status
+                Status = request.Status,
+                ProjectId = projectId > 0 ? projectId : null // Якщо проєкт є, передаємо його ID
             };
             return Ok(responseDto);
         }
+
         // пошук запиту за ід бенефіціара
         [HttpGet("beneficiary/{beneficiaryId}")]
         public async Task<ActionResult> GetRequestsByBeneficiaryId(int beneficiaryId)
         {
+            // ОНОВЛЕННЯ: Гарантовано підтягуємо ProjectId для профілю
             var list = await _context.HelpRequests
-        .Where(x => x.BeneficiaryId == beneficiaryId)
-        .Select(x => new HelpRequestResponseDTO
-        {
-            RequestId = x.RequestId,
-            BeneficiaryId = x.BeneficiaryId,
-            EmployeeId = x.EmployeeId,
-            RegistrationDate = x.RegistrationDate,
-            NeedDescription = x.NeedDescription,
-            DocumentPath = x.DocumentPath,
-            DeliveryAddress = x.DeliveryAddress,
-            Status = x.Status
-        }).ToListAsync();
+                .Where(x => x.BeneficiaryId == beneficiaryId)
+                .Select(x => new HelpRequestResponseDTO
+                {
+                    RequestId = x.RequestId,
+                    BeneficiaryId = x.BeneficiaryId,
+                    EmployeeId = x.EmployeeId,
+                    RegistrationDate = x.RegistrationDate,
+                    NeedDescription = x.NeedDescription,
+                    DocumentPath = x.DocumentPath,
+                    DeliveryAddress = x.DeliveryAddress,
+                    Status = x.Status,
+                    // Шукаємо, чи є проєкт, прив'язаний до цієї заявки
+                    ProjectId = _context.Projects.Where(p => p.RequestId == x.RequestId).Select(p => (int?)p.ProjectId).FirstOrDefault()
+                }).ToListAsync();
 
             return Ok(list);
         }
+
         //оновити статус запиту
         [HttpPut("{id}/status")]
         public async Task<ActionResult> UpdateHelpRequestStatus(int id, HelpRequestStatusUpdateDTO dto)
         {
             var request = await _context.HelpRequests.FindAsync(id);
-            if(request == null)
+            if (request == null)
             {
                 return NotFound(new { message = "Запит з таким ID не знайдено." });
             }
@@ -128,7 +144,5 @@ namespace CharityPlatformAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok(new { message = "Статус запиту успішно оновлено!" });
         }
-
-
     }
 }

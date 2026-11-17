@@ -6,6 +6,7 @@ namespace CharityPlatformAPI.DTOs
     {
         [Required(ErrorMessage = "Ім'я є обов'язковим!")]
         [StringLength(150, MinimumLength = 3, ErrorMessage = "Ім'я має містити від 3 до 150 символів!")]
+        [RegularExpression(@"^[А-Яа-яІіЇїЄєҐґA-Za-z\s\-\']+$", ErrorMessage = "Ім'я може містити лише літери.")]
         public string FullName { get; set; } = null!;
 
         [Required(ErrorMessage = "Введіть номер телефону!")]

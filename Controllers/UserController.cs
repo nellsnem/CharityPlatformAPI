@@ -2,7 +2,6 @@
 using CharityPlatformAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata.Ecma335;
 
 namespace CharityPlatformAPI.Controllers
 {
@@ -16,15 +15,17 @@ namespace CharityPlatformAPI.Controllers
         {
             _context = context;
         }
-        //додати клієнта
-        [HttpPost]
+
+        // ДОДАТИ КЛІЄНТА (Реєстрація)
+        [HttpPost("register")]
         public async Task<ActionResult> CreateUser(UserAccountCreateDTO dto)
         {
             bool phoneExists = await _context.UserAccounts.AnyAsync(u => u.Phone == dto.Phone);
 
             if (phoneExists)
             {
-                return BadRequest("Користувач із таким номером телефону вже зареєстрований.");
+                // Повертаємо JSON замість простого тексту
+                return BadRequest(new { message = "Користувач із таким номером телефону вже зареєстрований." });
             }
             var newUser = new UserAccount
             {
@@ -34,10 +35,11 @@ namespace CharityPlatformAPI.Controllers
             };
 
             _context.UserAccounts.Add(newUser);
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
 
             return Ok(new { message = "Користувача успішно створено!" });
         }
+
         // ВХІД
         [HttpPost("login")]
         public async Task<ActionResult> Login(UserLoginDTO dto)
@@ -46,16 +48,18 @@ namespace CharityPlatformAPI.Controllers
 
             if (user == null)
             {
-                return BadRequest("Невірний номер телефону або пароль.");
+                return BadRequest(new { message = "Невірний номер телефону або пароль." });
             }
 
             bool isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
 
             if (!isPasswordValid)
             {
-                return BadRequest("Невірний номер телефону або пароль.");
+                return BadRequest(new { message = "Невірний номер телефону або пароль." });
             }
-            return Ok(new { message = "Успішний вхід у систему!", userId = user.UserId });
+
+            // ДОДАНО fullName, щоб фронтенд міг показати його в шапці
+            return Ok(new { message = "Успішний вхід у систему!", userId = user.UserId, fullName = user.FullName });
         }
 
         // подивитись на клієнта
@@ -68,18 +72,18 @@ namespace CharityPlatformAPI.Controllers
                     UserId = x.UserId,
                     FullName = x.FullName,
                     Phone = x.Phone,
-
                 }).ToListAsync();
 
             return Ok(list);
         }
+
         // пошук користувача за ід
         [HttpGet("{id}")]
         public async Task<ActionResult> GetUserById(int id)
         {
             var user = await _context.UserAccounts.FindAsync(id);
 
-            if(user == null)
+            if (user == null)
             {
                 return NotFound(new { message = "Користувача з таким ID не знайдено." });
             }
@@ -88,10 +92,10 @@ namespace CharityPlatformAPI.Controllers
                 UserId = user.UserId,
                 FullName = user.FullName,
                 Phone = user.Phone,
-
             };
             return Ok(responseDto);
         }
+
         // змінити дані користувача
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateUser(int id, UserAccountUpdateDTO dto)
@@ -100,22 +104,23 @@ namespace CharityPlatformAPI.Controllers
 
             if (user == null)
             {
-                return NotFound("Користувача з таким ID не знайдено.");
-
+                return NotFound(new { message = "Користувача з таким ID не знайдено." });
             }
 
             bool phoneExists = await _context.UserAccounts
                 .AnyAsync(u => u.Phone == dto.Phone && u.UserId != id);
+
             if (phoneExists)
             {
-                return BadRequest("Цей номер телефону вже зайнятий іншим користувачем.");
+                return BadRequest(new { message = "Цей номер телефону вже зайнятий іншим користувачем." });
             }
             user.FullName = dto.FullName;
             user.Phone = dto.Phone;
 
             await _context.SaveChangesAsync();
-            return Ok("Дані користувача успішно оновлено!");
+            return Ok(new { message = "Дані користувача успішно оновлено!" });
         }
+
         // видалити користувача
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteUser(int id)
@@ -123,7 +128,7 @@ namespace CharityPlatformAPI.Controllers
             var user = await _context.UserAccounts.FindAsync(id);
             if (user == null)
             {
-                return NotFound("Користувача з таким ID не знайдено.");
+                return NotFound(new { message = "Користувача з таким ID не знайдено." });
             }
 
             bool isVolunteer = await _context.Volunteers.AnyAsync(v => v.UserId == id);
@@ -135,11 +140,9 @@ namespace CharityPlatformAPI.Controllers
             }
 
             _context.UserAccounts.Remove(user);
-
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Дані користувача успішно видалено!" });
         }
-        
     }
 }

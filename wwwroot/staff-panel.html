@@ -1,0 +1,520 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Робоче місце - БО "ЄДНІСТЬ"</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .admin-sidebar {
+            width: 250px;
+            background-color: #3b2a1a;
+            color: #fbf3db;
+            padding: 20px;
+        }
+
+            .admin-sidebar h2 {
+                color: #fbf3db;
+                border-bottom: 2px dashed #fbf3db;
+                padding-bottom: 10px;
+                font-size: 1.8rem;
+            }
+
+        .admin-nav {
+            list-style: none;
+            padding: 0;
+            margin-top: 30px;
+        }
+
+            .admin-nav li {
+                margin-bottom: 15px;
+            }
+
+            .admin-nav a {
+                color: #fbf3db;
+                text-decoration: none;
+                font-size: 1.2rem;
+                display: block;
+                padding: 10px;
+                border: 2px solid transparent;
+                border-radius: 5px;
+            }
+
+                .admin-nav a:hover, .admin-nav a.active {
+                    border-color: #fbf3db;
+                    background-color: rgba(251, 243, 219, 0.1);
+                }
+
+        .admin-content {
+            flex-grow: 1;
+            background-color: #e5dcc3;
+            padding: 30px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #3b2a1a;
+            padding-bottom: 10px;
+        }
+
+        .admin-card {
+            background-color: #fbf3db;
+            border: 2px solid #3b2a1a;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 4px 4px 0px #3b2a1a;
+            margin-bottom: 30px;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #receipt-block, #receipt-block * {
+                visibility: visible;
+            }
+
+            #receipt-block {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none;
+                border: none;
+            }
+
+            .print-hide {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- БОКОВЕ МЕНЮ -->
+        <aside class="admin-sidebar">
+            <h2>БО "ЄДНІСТЬ"</h2>
+            <div style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 20px;">Панель управління</div>
+            <ul class="admin-nav">
+                <li id="menu-employees" style="display: block;"><a href="#" id="nav-employees" class="active"> Працівники</a></li>
+                <li id="menu-projects" style="display: block;"><a href="#" id="nav-projects"> Проєкти та Запити</a></li>
+                <li id="menu-transactions" style="display: block;"><a href="#" id="nav-transactions"> Транзакції</a></li>
+                <li id="menu-contracts" style="display: block;"><a href="#" id="nav-contracts"> Договори</a></li>
+
+                <!-- МЕНЮ ДЛЯ КООРДИНАТОРА ВОЛОНТЕРІВ -->
+                <li id="menu-volunteers" style="display: block;"><a href="#" id="nav-volunteers"> Організація заходів</a></li>
+                <li id="menu-active-events" style="display: block;"><a href="#" id="nav-active-events"> Облік годин</a></li>
+                <li style="margin-top: 50px;"><a href="#" id="staff-logout" style="color: #d34c3d; border-color: #d34c3d;"> Вихід</a></li>
+            </ul>
+        </aside>
+
+        <!-- РОБОЧА ЗОНА -->
+        <main class="admin-content">
+            <div class="admin-header">
+                <h2 style="margin: 0; color: #3b2a1a;" id="page-title">Управління персоналом</h2>
+                <div style="text-align: right;">
+                    <div style="font-weight: bold; font-size: 1.2rem;" id="staff-name">Завантаження...</div>
+                    <div style="color: #3b7a57;" id="staff-role">Посада</div>
+                </div>
+            </div>
+
+            <!-- ================= ВКЛАДКА 1: ПРАЦІВНИКИ ================= -->
+            <div id="tab-employees" class="tab-pane">
+                <div class="admin-card">
+                    <h3 style="margin-top: 0; color: #3b7a57;"> Реєстрація нового працівника</h3>
+                    <form id="create-employee-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;" novalidate>
+                        <div class="form-group">
+                            <label>ПІБ (Повне ім'я):</label>
+                            <input type="text" id="emp-name" class="retro-input" placeholder="Іванов Іван Іванович" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Посада:</label>
+                            <select id="emp-position" class="retro-input" required>
+                                <option value="" disabled selected>-- Оберіть посаду --</option>
+                                <option value="Бухгалтер">Бухгалтер</option>
+                                <option value="Менеджер">Менеджер проєктів</option>
+                                <option value="Координатор">Координатор волонтерів</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Контактний телефон:</label>
+                            <input type="text" id="emp-phone" class="retro-input" placeholder="+380..." required>
+                        </div>
+                        <div class="form-group">
+                            <label>Логін (для входу):</label>
+                            <input type="text" id="emp-login" class="retro-input" placeholder="Наприклад: manager1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Пароль:</label>
+                            <input type="password" id="emp-password" class="retro-input" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group" style="display: flex; align-items: flex-end;">
+                            <button type="submit" id="btn-create-emp" class="btn-simple btn-primary" style="width: 100%;">Створити обліковий запис</button>
+                        </div>
+                        <div id="emp-error" class="error-message" style="display: none; grid-column: span 2;"></div>
+                        <div id="emp-success" class="success-message" style="display: none; grid-column: span 2;">Працівника успішно додано в систему!</div>
+                    </form>
+                </div>
+
+                <div class="admin-card">
+                    <h3 style="margin-top: 0;">Штат працівників</h3>
+                    <table class="retro-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>ПІБ</th>
+                                <th>Посада</th>
+                                <th>Телефон</th>
+                                <th>Логін</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employees-table-body">
+                            <tr><td colspan="5">Завантаження даних...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ================= ВКЛАДКА 2: ТРАНЗАКЦІЇ ================= -->
+            <div id="tab-transactions" class="tab-pane" style="display: none;">
+
+                <div class="admin-card">
+                    <h3 style="margin-top: 0; color: #d34c3d;"> Проведення платежу (Витрата / Зарплата)</h3>
+
+                    <form id="create-transaction-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;" novalidate>
+                        <div class="form-group">
+                            <label>Тип транзакції:</label>
+                            <input type="text" id="trans-type" class="retro-input" value="витрата" readonly style="background-color: #e5dcc3; color: #555; cursor: not-allowed;">
+                        </div>
+                        <div class="form-group">
+                            <label>ID Проєкту (пусто для ЗП/заг. витрат):</label>
+                            <input type="number" id="trans-project-id" class="retro-input" placeholder="Наприклад: 1 (якщо є)" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Сума (₴):</label>
+                            <input type="number" id="trans-amount" class="retro-input" placeholder="Наприклад: 1000" min="1" step="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Призначення платежу (Коротко):</label>
+                            <input type="text" id="trans-purpose" class="retro-input" placeholder="Оплата за ліки, Зарплата..." required>
+                        </div>
+
+                        <!-- ОНОВЛЕННЯ: Додано поле для вибору ID Договору -->
+                        <div class="form-group" style="background-color: #e5dcc3; padding: 10px; border-radius: 5px;">
+                            <label>ID Договору (якщо оплата постачальнику):</label>
+                            <input type="number" id="trans-contract-id" class="retro-input" placeholder="Наприклад: 1" min="1">
+                        </div>
+
+                        <div class="form-group" style="background-color: #e5dcc3; padding: 10px; border-radius: 5px;">
+                            <label>ID Працівника (тільки для зарплати):</label>
+                            <input type="number" id="trans-employee-id" class="retro-input" placeholder="Наприклад: 4" min="1">
+                        </div>
+
+                        <div class="form-group" style="display: flex; align-items: flex-end; grid-column: span 2;">
+                            <button type="submit" id="btn-create-trans" class="btn-simple btn-primary" style="width: 100%;">Провести платіж</button>
+                        </div>
+                        <div id="trans-error" class="error-message" style="display: none; grid-column: span 2;"></div>
+                    </form>
+
+                    <!-- Блок Квитанції -->
+                    <div id="receipt-block" style="display: none; margin-top: 15px; padding: 25px; border: 2px dashed #3b2a1a; background-color: #fff; color: #000; width: 100%; max-width: 450px; margin-left: auto; margin-right: auto; font-family: 'Courier New', Courier, monospace;">
+                        <h3 style="text-align: center; margin-top: 0; border-bottom: 2px solid #000; padding-bottom: 10px;">БО "ЄДНІСТЬ" - ВИПИСКА</h3>
+                        <p style="text-align: right; margin-bottom: 20px;"><strong>Дата:</strong> <span id="receipt-date"></span></p>
+
+                        <p><strong>Призначення:</strong> <br><span id="receipt-purpose" style="font-size: 1.1rem;"></span></p>
+                        <p id="receipt-project-row" style="display: none;"><strong>Віднесено до проєкту №:</strong> <span id="receipt-project"></span></p>
+
+                        <!-- ОНОВЛЕННЯ: Додано рядок для відображення Договору у квитанції -->
+                        <p id="receipt-contract-row" style="display: none;"><strong>Згідно з договором №:</strong> <span id="receipt-contract"></span></p>
+                        <p id="receipt-emp-row" style="display: none;"><strong>Співробітник №:</strong> <span id="receipt-emp"></span></p>
+
+                        <div style="border-top: 2px dashed #000; margin-top: 20px; padding-top: 15px; text-align: right; font-size: 1.3rem;">
+                            <strong>СУМА: <span id="receipt-amount"></span> ₴</strong>
+                        </div>
+
+                        <div class="print-hide" style="display: flex; gap: 10px; margin-top: 30px;">
+                            <button type="button" class="btn-simple" onclick="window.print()" style="flex: 1; background-color: #e5dcc3; border-color: #3b2a1a; color: #3b2a1a;">🖨️ Друк</button>
+                            <button type="button" class="btn-simple btn-primary" id="btn-close-receipt" style="flex: 1;">Новий платіж</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <h3 style="margin-top: 0;">Історія транзакцій</h3>
+                    <table class="retro-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Проєкт</th>
+                                <th>Договір</th>
+                                <th>Тип</th>
+                                <th>Сума (₴)</th>
+                                <th>Призначення</th>
+                                <th>Дата</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-table-body">
+                            <tr><td colspan="7">Дані ще не завантажені...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ================= ВКЛАДКА 3: ДОГОВОРИ ТА ПОСТАЧАЛЬНИКИ ================= -->
+            <div id="tab-contracts" class="tab-pane" style="display: none;">
+
+                <!-- Блок Постачальників -->
+                <div class="admin-card" style="border-color: #276345;">
+                    <h3 style="margin-top: 0; color: #276345;"> Реєстр постачальників</h3>
+                    <form id="create-supplier-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;" novalidate>
+                        <div class="form-group">
+                            <label>Назва компанії:</label>
+                            <input type="text" id="sup-name" class="retro-input" placeholder="ТОВ 'Медикал'" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Код ЄДРПОУ:</label>
+                            <input type="text" id="sup-edrpou" class="retro-input" placeholder="12345678" required>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Контактні дані (адреса, телефон):</label>
+                            <input type="text" id="sup-contacts" class="retro-input" placeholder="Київ, вул. Хрещатик, 1...">
+                        </div>
+                        <div class="form-group" style="grid-column: span 2; display: flex; justify-content: flex-end;">
+                            <button type="submit" id="btn-create-sup" class="btn-simple" style="background-color: #276345; color: #fbf3db;">Додати постачальника</button>
+                        </div>
+                        <div id="sup-error" class="error-message" style="display: none; grid-column: span 2;"></div>
+                        <div id="sup-success" class="success-message" style="display: none; grid-column: span 2;">Постачальника додано!</div>
+                    </form>
+
+                    <table class="retro-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Назва компанії</th>
+                                <th>ЄДРПОУ</th>
+                                <th>Контакти</th>
+                            </tr>
+                        </thead>
+                        <tbody id="suppliers-table-body">
+                            <tr><td colspan="4">Завантаження даних...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Блок Договорів -->
+                <div class="admin-card" style="border-color: #3b2a1a;">
+                    <h3 style="margin-top: 0;"> Реєстрація договору</h3>
+                    <form id="create-contract-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;" novalidate>
+                        <div class="form-group">
+                            <label>ID Постачальника:</label>
+                            <input type="number" id="con-supplier-id" class="retro-input" placeholder="Наприклад: 1" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>ID Проєкту:</label>
+                            <input type="number" id="con-project-id" class="retro-input" placeholder="Наприклад: 2" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Дата підписання:</label>
+                            <input type="date" id="con-date" class="retro-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Сума договору (₴):</label>
+                            <input type="number" id="con-amount" class="retro-input" placeholder="50000" min="1" step="1" required>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Предмет договору (що купуємо):</label>
+                            <input type="text" id="con-subject" class="retro-input" placeholder="Постачання 100 турнікетів СІЧ" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Кількість товарів/послуг:</label>
+                            <input type="number" id="con-quantity" class="retro-input" placeholder="100" min="1" required>
+                        </div>
+                        <div class="form-group" style="display: flex; align-items: flex-end;">
+                            <button type="submit" id="btn-create-con" class="btn-simple btn-primary" style="width: 100%;">Створити договір</button>
+                        </div>
+                        <div id="con-error" class="error-message" style="display: none; grid-column: span 2;"></div>
+                        <div id="con-success" class="success-message" style="display: none; grid-column: span 2;">Договір зареєстровано!</div>
+                    </form>
+
+                    <table class="retro-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Постач. (ID)</th>
+                                <th>Проєкт (ID)</th>
+                                <th>Дата</th>
+                                <th>Предмет</th>
+                                <th>Сума (₴)</th>
+                                <th>Статус</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contracts-table-body">
+                            <tr><td colspan="7">Завантаження даних...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <!-- ================= ВКЛАДКА 4: ПРОЄКТИ (МЕНЕДЖЕР) ================= -->
+            <div id="tab-projects" class="tab-pane" style="display: none;">
+
+                <div class="admin-card" style="border-color: #3b7a57;">
+                    <h3 style="margin-top: 0; color: #3b7a57;">Створення проєкту</h3>
+                    <form id="create-project-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;" novalidate>
+                        <div class="form-group">
+                            <label>Назва проєкту:</label>
+                            <input type="text" id="proj-title" class="retro-input" placeholder="Наприклад: Збір на турнікети" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Цільова сума (₴):</label>
+                            <input type="number" id="proj-budget" class="retro-input" placeholder="Наприклад: 100000" min="1" step="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>ID Бенефіціара (опціонально):</label>
+                            <input type="number" id="proj-beneficiary-id" class="retro-input" placeholder="Якщо формується для конкретної особи" min="1">
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Опис проєкту:</label>
+                            <textarea id="proj-description" class="retro-input" rows="3" placeholder="Детальний опис того, на що збираються кошти..." required></textarea>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2; display: flex; justify-content: flex-end;">
+                            <button type="submit" id="btn-create-proj" class="btn-simple btn-primary">Створити проєкт</button>
+                        </div>
+                        <div id="proj-error" class="error-message" style="display: none; grid-column: span 2;"></div>
+                        <div id="proj-success" class="success-message" style="display: none; grid-column: span 2;">Проєкт успішно створено!</div>
+                    </form>
+                </div>
+
+                <div class="admin-card">
+                    <h3 style="margin-top: 0; color: #3b2a1a;"> Заявки на розгляд (Нові)</h3>
+                    <p style="font-size: 0.9rem; color: #555;">Детальна інформація про запити від бенефіціарів для формування проєкту.</p>
+
+                    <div id="requests-container" style="display: flex; flex-direction: column; gap: 20px;">
+                        <div style="padding: 20px; text-align: center;">Завантаження заявок...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= НОВА ВКЛАДКА 5: ВОЛОНТЕРИ (КООРДИНАТОР) ================= -->
+            <div id="tab-volunteers" class="tab-pane" style="display: none;">
+
+                <!-- Форма створення заходу (Схована за замовчуванням) -->
+                <div class="admin-card" id="event-creation-card" style="display: none; border-color: #d34c3d;">
+                    <h3 style="margin-top: 0; color: #d34c3d;"> Організація заходу</h3>
+
+                    <!-- Інформація про проєкт для Координатора (тільки для читання) -->
+                    <div style="background-color: #fbf3db; padding: 15px; border: 2px dashed #d34c3d; border-radius: 5px; margin-bottom: 20px;">
+                        <strong style="color: #3b2a1a;">Пов'язаний проєкт:</strong> <span id="event-proj-title" style="font-weight: bold; font-size: 1.1rem;"></span><br>
+                        <strong style="color: #3b2a1a; display: block; margin-top: 10px;">Початковий опис потреби (з контактами):</strong>
+                        <div id="event-proj-desc" style="font-style: italic; margin-top: 5px; color: #555; white-space: pre-wrap;"></div>
+                    </div>
+
+                    <form id="create-event-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;" novalidate>
+                        <!-- Прихований ID проєкту -->
+                        <input type="hidden" id="event-project-id">
+
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Назва заходу:</label>
+                            <input type="text" id="event-title" class="retro-input" placeholder="Наприклад: Плетіння маскувальних сіток" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Дата та час збору:</label>
+                            <input type="datetime-local" id="event-datetime" class="retro-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Кількість волонтерських місць:</label>
+                            <input type="number" id="event-spots" class="retro-input" placeholder="Наприклад: 10" min="1" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Місце збору (Адреса):</label>
+                            <!-- Кнопку прибрано, поле залишено (адреса підтягнеться сюди сама) -->
+                            <input type="text" id="event-location" class="retro-input" placeholder="Наприклад: Вул. Хрещатик, 22" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Телефон для зв'язку (Організатор заходу):</label>
+                            <!-- Кнопку прибрано, поле залишено для ручного вводу -->
+                            <input type="text" id="event-contact-phone" class="retro-input" placeholder="Наприклад: +380991234567" required>
+                        </div>
+
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Детальний опис для волонтерів (інструктаж, що брати з собою):</label>
+                            <textarea id="event-description" class="retro-input" rows="3" placeholder="Опишіть завдання..." required></textarea>
+                        </div>
+
+                        <div class="form-group" style="grid-column: span 2; display: flex; justify-content: space-between;">
+                            <button type="button" id="btn-cancel-event" class="btn-simple" style="background-color: #e5dcc3; color: #3b2a1a;">Скасувати</button>
+                            <button type="submit" id="btn-create-event" class="btn-simple btn-primary">Опублікувати захід</button>
+                        </div>
+
+                        <div id="event-error" class="error-message" style="display: none; grid-column: span 2;"></div>
+                        <div id="event-success" class="success-message" style="display: none; grid-column: span 2;">Захід успішно створено! Проєкт переведено в статус "захід".</div>
+                    </form>
+                </div>
+
+                <div class="admin-card" id="volunteer-list-card">
+                    <h3 style="margin-top: 0; color: #3b7a57;">🎯 Проєкти, готові до реалізації (Статус: Зібрано)</h3>
+                    <p style="font-size: 0.9rem; color: #555;">Тут відображаються лише ті проєкти, на які вже зібрано кошти. Оберіть проєкт, щоб організувати для нього волонтерський захід.</p>
+
+                    <div id="volunteer-projects-container" style="display: flex; flex-direction: column; gap: 20px; margin-top: 20px;">
+                        <div style="padding: 20px; text-align: center;">Завантаження проєктів...</div>
+                    </div>
+                </div>
+            </div>
+            <!-- ================= НОВА ВКЛАДКА 6: ОБЛІК ГОДИН (КООРДИНАТОР) ================= -->
+            <div id="tab-active-events" class="tab-pane" style="display: none;">
+
+                <div class="admin-card" id="active-events-list-card">
+                    <h3 style="margin-top: 0; color: #3b7a57;"> Активні заходи (Облік волонтерів)</h3>
+                    <p style="font-size: 0.9rem; color: #555;">Оберіть захід, щоб відмітити присутність волонтерів та нарахувати їм години роботи.</p>
+
+                    <div id="active-events-container" style="display: flex; flex-direction: column; gap: 20px; margin-top: 20px;">
+                        <div style="padding: 20px; text-align: center;">Завантаження заходів...</div>
+                    </div>
+                </div>
+
+                <!-- Панель оцінювання конкретного заходу (Схована) -->
+                <div class="admin-card" id="event-attendance-card" style="display: none; border-color: #d34c3d;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0; color: #d34c3d;"> Список волонтерів на захід</h3>
+                        <button type="button" id="btn-back-to-events" class="btn-simple" style="background-color: #e5dcc3; color: #3b2a1a; padding: 5px 15px;">← Назад</button>
+                    </div>
+
+                    <div style="background-color: #fbf3db; padding: 15px; border: 2px dashed #d34c3d; border-radius: 5px; margin-bottom: 20px;">
+                        <strong style="color: #3b2a1a; font-size: 1.2rem;" id="attendance-event-title">Назва заходу</strong><br>
+                        <span style="color: #555; font-size: 0.9rem;" id="attendance-event-date">Дата...</span>
+                    </div>
+
+                    <table class="retro-table">
+                        <thead>
+                            <tr>
+                                <th>ID Волонтера</th>
+                                <th>Статус присутності</th>
+                                <th>Відпрацьовані години</th>
+                                <th>Дія</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendance-table-body">
+                            <tr><td colspan="4">Завантаження волонтерів...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="js/staff-panel.js?v=3"></script>
+</body>
+</html>

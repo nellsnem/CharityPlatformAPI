@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Особистий кабінет - БО "ЄДНІСТЬ"</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="top-border"></div>
+
+    <nav>
+        <h1>БО "ЄДНІСТЬ"</h1>
+        <div class="links">
+            <a href="index.html">на головну</a>
+            <a href="#" id="logout-btn" class="btn-nav" style="color: #d34c3d; border-color: #d34c3d;">вийти</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="profile-header">
+            <h2 class="page-title">Ваш профіль</h2>
+            <div class="user-info">
+                <p><strong>Ім'я:</strong> <span id="user-name-display">Завантаження...</span></p>
+                <p><strong>Телефон:</strong> <span id="user-phone-display">Завантаження...</span></p>
+            </div>
+        </div>
+
+        <div class="split-layout">
+            <!-- ЛІВА ПОЛОВИНА (Бенефіціар) -->
+            <div class="split-column">
+                <div class="role-card" id="btn-beneficiary">
+                    <h3>Я Бенефіціар</h3>
+                    <p>Подати заявку на отримання допомоги від фонду.</p>
+                </div>
+
+                <div id="beneficiary-panel" class="hidden-panel">
+
+                    <!-- БЛОК 1: ДАШБОРД (Таблиця запитів) -->
+                    <div id="beneficiary-dashboard-view" style="display: none;">
+                        <h3>Мої запити на допомогу</h3>
+                        <table class="retro-table" style="margin-bottom: 20px; width: 100%; table-layout: fixed; word-break: break-word; overflow-wrap: break-word;">
+                            <thead>
+                                <tr>
+                                    <th>№ Запиту</th>
+                                    <th>Опис потреби</th>
+                                    <th>Статус</th>
+                                </tr>
+                            </thead>
+                            <tbody id="beneficiary-requests-body">
+                                <tr><td colspan="3">Завантаження...</td></tr>
+                            </tbody>
+                        </table>
+                        <button id="btn-new-request" class="btn-simple btn-primary">Створити новий запит</button>
+                    </div>
+
+                    <!-- БЛОК 2: ФОРМА (Створення нового запиту) -->
+                    <div id="beneficiary-form-view" style="display: none;">
+                        <h3>Нова заявка на допомогу</h3>
+                        <form id="request-form" novalidate>
+                            <div class="form-group">
+                                <label>Номер та серія паспорта (або ID-картки):</label>
+                                <input type="text" id="req-passport" class="retro-input" placeholder="Наприклад: ВВ 123456 або 123456789">
+                                <div id="error-passport" class="field-error"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Опис потреби:</label>
+                                <textarea id="req-desc" rows="4" placeholder="Опишіть, що саме сталося і що конкретно вам потрібно..."></textarea>
+                                <div id="error-desc" class="field-error"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Населений пункт / Адреса доставки:</label>
+                                <input type="text" id="req-address" class="retro-input" placeholder="Наприклад: м. Сміла, відділення пошти №2">
+                                <div id="error-address" class="field-error"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Фото документа, що підтверджує особу / статус:</label>
+                                <input type="file" id="req-document" class="retro-input" accept="image/*,.pdf">
+                                <div id="error-document" class="field-error"></div>
+                            </div>
+
+                            <div id="server-error" class="error-message" style="display: none; margin-bottom: 10px;"></div>
+
+                            <div style="display: flex; gap: 10px;">
+                                <button type="submit" class="btn-simple btn-primary">Відправити заявку</button>
+                                <button type="button" id="btn-cancel-request" class="btn-simple">Скасувати</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- БЛОК 3: УСПІХ -->
+                    <div id="beneficiary-success-view" style="display: none; text-align: center;">
+                        <h3 style="color: #3b7a57;"> Заявку успішно надіслано!</h3>
+                        <p style="font-size: 1.1rem;">Ваш запит зареєстровано в системі. Наш менеджер розгляне його та зв'яжеться з вами за вказаним телефоном.</p>
+                        <div style="margin-top: 20px; padding: 15px; border: 2px dashed #3b2a1a; background-color: #e5dcc3; display: inline-block;">
+                            <strong>Статус вашої заявки:</strong> <span style="color: #d34c3d;">В обробці </span>
+                        </div>
+                        <br>
+                        <button id="btn-back-to-dashboard" class="btn-simple" style="margin-top: 20px;">Повернутися до списку</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ПРАВА ПОЛОВИНА (Волонтер) -->
+            <div class="split-column">
+                <div class="role-card" id="btn-volunteer">
+                    <h3>Я Волонтер</h3>
+                    <p>Приєднатися до команди та допомогти фонду руками.</p>
+                </div>
+
+                <div id="volunteer-panel" class="hidden-panel">
+                    <h3>Кабінет волонтера</h3>
+                    <div class="dashboard-section">
+                        <h4>Мої поточні заходи:</h4>
+                        <ul class="retro-list" id="volunteer-events-list">
+                            <li>Завантаження...</li>
+                        </ul>
+                    </div>
+
+                    <div class="dashboard-section">
+                        <h4>Моя статистика:</h4>
+                        <div style="display: flex; gap: 20px; margin-bottom: 20px; font-size: 1.2rem;">
+                            <div style="background: #3b7a57; color: #fbf3db; padding: 10px 20px; border-radius: 5px; border: 2px solid #3b2a1a; flex: 1;">
+                                <strong>Усього годин:</strong> <br><span id="total-hours-display">0</span>
+                            </div>
+                            <div style="background: #d34c3d; color: #fbf3db; padding: 10px 20px; border-radius: 5px; border: 2px solid #3b2a1a; flex: 1;">
+                                <strong>Місце в рейтингу:</strong> <br><span id="rank-display">—</span>
+                            </div>
+                        </div>
+
+                        <table class="retro-table">
+                            <thead>
+                                <tr>
+                                    <th>Місяць</th>
+                                    <th>Відпрацьовано годин</th>
+                                </tr>
+                            </thead>
+                            <tbody id="volunteer-stats-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/profile.js"></script>
+</body>
+</html>

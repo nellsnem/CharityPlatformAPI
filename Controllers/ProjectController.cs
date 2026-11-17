@@ -15,6 +15,7 @@ namespace CharityPlatformAPI.Controllers
         {
             _context = context;
         }
+
         // СТВОРИТИ ПРОЄКТ
         [HttpPost]
         public async Task<ActionResult> CreateProject(ProjectCreateDTO dto)
@@ -30,23 +31,29 @@ namespace CharityPlatformAPI.Controllers
             {
                 return BadRequest(new { message = "Для цього запиту на допомогу вже створено проєкт!" });
             }
-            if (helpRequest.Status == "нове")
+
+            // Надійна перевірка статусу (якщо ще не оброблено)
+            if (helpRequest.Status != "схвалено" && helpRequest.Status != "відхилено")
             {
                 helpRequest.Status = "схвалено";
-                helpRequest.EmployeeId = dto.EmployeeId; 
+                helpRequest.EmployeeId = dto.EmployeeId;
+
+                // Явно кажемо Entity Framework, що цей запис змінено
+                _context.Entry(helpRequest).State = EntityState.Modified;
             }
 
             var newProject = new Project
             {
-                RequestId = dto.HelpRequestId, 
+                RequestId = dto.HelpRequestId,
                 EmployeeId = dto.EmployeeId,
                 Title = dto.Title,
                 Description = dto.Description,
                 ApprovedBudget = dto.ApprovedBudget,
-                Status = "активний", 
+                Status = "активний",
                 StartDate = dto.StartDate,
                 EndDate = dto.EndDate
             };
+
             _context.Projects.Add(newProject);
             await _context.SaveChangesAsync();
 
@@ -73,13 +80,14 @@ namespace CharityPlatformAPI.Controllers
 
             return Ok(list);
         }
+
         // ЗНАЙТИ ПРОЄКТИ за ід
         [HttpGet("{id}")]
         public async Task<ActionResult> GetProjectById(int id)
         {
             var project = await _context.Projects.FindAsync(id);
 
-            if(project == null)
+            if (project == null)
             {
                 return NotFound(new { message = "Проєкт з таким ID не знайдено." });
             }
@@ -95,17 +103,17 @@ namespace CharityPlatformAPI.Controllers
                 Status = project.Status,
                 StartDate = project.StartDate,
                 EndDate = project.EndDate
-
             };
 
             return Ok(responseDto);
         }
-        //ЗНАЙТИ ПРОЄКТИ ЗА АЙДІ ПРАЦІВНИКА
+
+        // ЗНАЙТИ ПРОЄКТИ ЗА АЙДІ ПРАЦІВНИКА
         [HttpGet("employee/{employeeId}")]
         public async Task<ActionResult> GetProjectsByEmployeeId(int employeeId)
         {
             var projects = await _context.Projects
-            .Where(p => p.EmployeeId == employeeId) 
+            .Where(p => p.EmployeeId == employeeId)
             .Select(project => new ProjectResponseDTO
             {
                 ProjectId = project.ProjectId,
@@ -117,7 +125,7 @@ namespace CharityPlatformAPI.Controllers
                 Status = project.Status,
                 StartDate = project.StartDate,
                 EndDate = project.EndDate
-            }).ToListAsync(); 
+            }).ToListAsync();
 
             if (projects.Count == 0)
             {
@@ -126,6 +134,7 @@ namespace CharityPlatformAPI.Controllers
 
             return Ok(projects);
         }
+
         // ЗАКРИТИ ПРОЄКТ (встановлення дати та статусу "завершено")
         [HttpPut("{id}")]
         public async Task<ActionResult> CompleteProject(int id, ProjectUpdateDTO dto)
@@ -142,6 +151,5 @@ namespace CharityPlatformAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok(new { message = "Проєкт успішно закрито!" });
         }
-
     }
 }

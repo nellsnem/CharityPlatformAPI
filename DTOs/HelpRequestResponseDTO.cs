@@ -10,5 +10,7 @@
         public string? DocumentPath { get; set; }
         public string? DeliveryAddress { get; set; }
         public string Status { get; set; } = null!;
+
+        public int? ProjectId { get; set; }
     }
 }

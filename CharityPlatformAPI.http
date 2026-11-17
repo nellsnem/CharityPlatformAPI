@@ -151,11 +151,11 @@ POST https://localhost:7196/api/Employee
 Content-Type: application/json
 
 {
-"fullName": "ТЕСТ ПРАЦІВНИК",
-"position": "Менеджер проєктів",
-"contactPhone": "+380533234567",
-"login": "ivan_BHager",
-"password": "SuperSecretPassword123"
+"fullName": "інна михайлівна",
+"position": "бухгалетр",
+"contactPhone": "+380000000000",
+"login": "buhalter",
+"password": "000000"
 }
 
 ###Отримати список усіх працівників (для панелі адміністратора)

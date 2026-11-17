@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Деталі проєкту - БО "ЄДНІСТЬ"</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="top-border"></div>
+
+    <nav>
+        <h1>БО "ЄДНІСТЬ"</h1>
+        <div class="links">
+            <a href="index.html">на головну</a>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top: 20px;">
+        <a href="index.html" style="color: #3b2a1a; font-family: 'Nunito', sans-serif; text-decoration: underline; margin-bottom: 20px; display: inline-block;">← Повернутися до списку зборів</a>
+
+        <div id="loading-project" class="loading-text">Завантаження інформації про проєкт...</div>
+
+        <!-- БЛОК ПРОЄКТУ -->
+        <div class="split-layout" id="project-content" style="display: none;">
+
+            <!-- ЛІВА КОЛОНКА: Інформація про проєкт -->
+            <div class="split-column" style="background-color: #fbf3db; border: 2px solid #3b2a1a; border-radius: 8px; padding: 30px; box-shadow: 4px 4px 0px #3b2a1a;">
+                <h2 id="proj-title" style="margin-top: 0; font-size: 2.2rem; color: #d34c3d;">Назва проєкту</h2>
+
+                <div style="margin-bottom: 20px; font-weight: bold; color: #276345;" id="proj-status">Статус: Активний</div>
+
+                <p id="proj-desc" style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 30px;">
+                    Опис...
+                </p>
+
+                <div style="background-color: #e5dcc3; padding: 15px; border: 2px dashed #3b2a1a; margin-bottom: 30px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <strong>Дата початку:</strong> <span id="proj-start-date">...</span>
+                    </div>
+                </div>
+
+                <!-- НОВИЙ БЛОК: Інформація про волонтерський захід -->
+                <div id="project-event-block" style="display: none; background-color: #fff; border: 2px solid #3b7a57; border-radius: 8px; padding: 20px; margin-bottom: 30px; box-shadow: 2px 2px 0px #3b7a57;">
+                    <h3 style="margin-top: 0; color: #3b7a57; font-size: 1.4rem;"> Заплановано волонтерський захід!</h3>
+                    <div style="font-size: 1.1rem; line-height: 1.6;">
+                        <div style="margin-bottom: 8px;"><strong>Захід:</strong> <span id="event-info-title"></span></div>
+                        <div style="margin-bottom: 8px;"><strong>Дата та час збору:</strong> <span id="event-info-date"></span></div>
+                        <div style="margin-bottom: 8px;"><strong>Місце збору:</strong> <span id="event-info-location"></span></div>
+                        <div style="margin-bottom: 8px; color: #d34c3d;"><strong>Вільних місць:</strong> <span id="event-info-spots">Обчислення...</span></div>
+
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 2px dashed #e5dcc3;">
+                            <strong>Деталі від координатора:</strong>
+                            <div id="event-info-desc" style="margin-top: 5px; font-style: italic; white-space: pre-wrap;"></div>
+                        </div>
+
+                        <!-- Кнопка приєднання та повідомлення -->
+                        <div style="margin-top: 20px; text-align: right; border-top: 2px dashed #3b7a57; padding-top: 15px;">
+                            <button id="btn-join-event" class="btn-simple btn-primary" style="display: none; padding: 10px 25px; font-size: 1.1rem;"> Приєднатися до заходу</button>
+                            <div id="join-event-message" style="color: #d34c3d; font-weight: bold; margin-top: 10px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="progress-bg" style="height: 15px; margin-bottom: 10px;">
+                    <div id="proj-progress-fill" class="progress-fill" style="width: 0%; transition: width 0.5s ease-in-out;"></div>
+                </div>
+
+                <div class="progress-stats" style="font-size: 1.1rem; font-weight: bold;">
+                    <span>Зібрано: <span id="proj-collected">0</span> ₴</span>
+                    <span>Ціль: <span id="proj-budget">0</span> ₴</span>
+                </div>
+            </div>
+
+            <!-- ПРАВА КОЛОНКА: Форма для донату -->
+            <div class="split-column">
+                <div style="background-color: #fbf3db; border: 2px solid #3b2a1a; border-radius: 8px; padding: 30px; box-shadow: 4px 4px 0px #3b2a1a;">
+                    <h3 style="margin-top: 0; border-bottom: 2px dashed #3b2a1a; padding-bottom: 10px;">Підтримати цей збір</h3>
+
+                    <!-- Блок: Збір завершено (прихований за замовчуванням) -->
+                    <div id="project-closed-view" style="display: none; text-align: center; margin-top: 20px;">
+                        <h3 style="color: #3b7a57; font-size: 1.5rem;"> Збір завершено!</h3>
+                        <p style="font-size: 1.1rem; line-height: 1.5; color: #555;">Ми щиро дякуємо всім, хто долучився. Необхідна сума вже зібрана, тому ми більше не приймаємо донати на цей проєкт.</p>
+                        <button class="btn-simple" style="margin-top: 15px;" onclick="window.location.href='index.html'">Переглянути інші збори</button>
+                    </div>
+
+                    <form id="donate-form" novalidate>
+                        <div class="form-group">
+                            <label>Сума донату (₴):</label>
+                            <input type="number" id="donate-amount" class="retro-input" placeholder="Наприклад: 500" min="1" step="1" required>
+                            <div id="error-amount" class="field-error"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Призначення платежу:</label>
+                            <input type="text" id="donate-purpose" class="retro-input" value="Благодійний внесок" readonly style="background-color: #e5dcc3; color: #555; cursor: not-allowed;">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Номер картки (тестова оплата):</label>
+                            <input type="text" id="donate-card" class="retro-input" placeholder="1111 2222 3333 4444" maxlength="19">
+                            <div id="error-card" class="field-error"></div>
+                        </div>
+
+                        <div id="server-error" class="error-message" style="display: none; margin-bottom: 10px;"></div>
+
+                        <button type="submit" id="btn-submit-donate" class="btn-simple btn-primary">Зробити переказ</button>
+                    </form>
+
+                    <!-- Блок успішного донату -->
+                    <div id="donate-success-view" style="display: none; text-align: center; margin-top: 20px;">
+                        <h3 style="color: #3b7a57;"> Платіж успішно оброблено!</h3>
+                        <p>Щиро дякуємо за вашу підтримка. Кожна гривня наближає нас до мети.</p>
+                        <button id="btn-donate-again" class="btn-simple" style="margin-top: 15px;">Зробити ще один донат</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/project.js"></script>
+</body>
+</html>

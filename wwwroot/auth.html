@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>БО "ЄДНІСТЬ" - Авторизація</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="top-border"></div>
+
+    <nav>
+        <h1>БО "ЄДНІСТЬ"</h1>
+        <div class="links">
+            <a href="index.html">на головну</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="auth-wrapper">
+            <!-- Блок входу -->
+            <div class="auth-section login-section">
+                <h2>Вхід</h2>
+                <p>Введіть свої дані для входу в кабінет</p>
+                <form id="login-form" novalidate>
+                    <div class="form-group">
+                        <label for="login-phone">Номер телефону</label>
+                        <input type="text" id="login-phone" placeholder="+380931234567" pattern="^\+380\d{9}$" title="Формат: +380XXXXXXXXX" required>
+                    </div>
+                    <div class="form-group" >
+                        <label for="login-password">Пароль</label>
+                        <input type="password" id="login-password" placeholder="********" required>
+                    </div>
+                    <div id="login-error" class="error-message"></div>
+                    <button type="submit" class="btn-simple btn-primary">УВІЙТИ</button>
+                </form>
+            </div>
+
+            <div class="auth-divider"></div>
+
+            <!-- Блок реєстрації -->
+            <div class="auth-section register-section">
+                <h2>Реєстрація</h2>
+                <p>Створіть профіль для участі у проєктах фонду</p>
+                <form id="register-form" novalidate>
+                    <div class="form-group">
+                        <label for="reg-name">ПІБ (Повне ім'я)</label>
+                        <input type="text" id="reg-name" placeholder="Петренко Петро Петрович" minlength="3" pattern="^[А-Яа-яІіЇїЄєҐґA-Za-z\s\-\']+$" title="Ім'я може містити лише літери" required>                    </div>
+                    <div class="form-group">
+                        <label for="reg-phone">Номер телефону</label>
+                        <input type="text" id="reg-phone" placeholder="+380931234567" pattern="^\+380\d{9}$" title="Формат: +380XXXXXXXXX" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Пароль</label>
+                        <input type="password" id="reg-password" placeholder="Мінімум 4 символи" minlength="4" required>
+                    </div>
+                    <div id="reg-error" class="error-message"></div>
+                    <div id="reg-success" class="success-message"></div>
+                    <button type="submit" class="btn-simple">ЗАРЕЄСТРУВАТИСЯ</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>

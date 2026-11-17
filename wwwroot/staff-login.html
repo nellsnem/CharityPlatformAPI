@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Службовий вхід - БО "ЄДНІСТЬ"</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="top-border"></div>
+
+    <nav>
+        <h1>БО "ЄДНІСТЬ"</h1>
+        <div class="links">
+            <a href="index.html">повернутися на головну</a>
+        </div>
+    </nav>
+
+    <div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 70vh;">
+        <div style="background-color: #fbf3db; border: 2px solid #3b2a1a; border-radius: 8px; padding: 40px; width: 100%; max-width: 450px; box-shadow: 6px 6px 0px #3b2a1a;">
+            <h2 style="margin-top: 0; color: #3b7a57; text-align: center; border-bottom: 2px dashed #3b2a1a; padding-bottom: 15px;">Вхід для персоналу</h2>
+
+            <form id="staff-login-form" novalidate>
+                <div class="form-group">
+                    <label>Логін працівника:</label>
+                    <input type="text" id="staff-login" class="retro-input" placeholder="Введіть логін" required>
+                    <div id="error-login" class="field-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Пароль:</label>
+                    <input type="password" id="staff-password" class="retro-input" placeholder="••••••••" required>
+                    <div id="error-password" class="field-error"></div>
+                </div>
+
+                <div id="server-error" class="error-message" style="display: none; margin-bottom: 15px;"></div>
+
+                <button type="submit" id="btn-staff-login" class="btn-simple btn-primary" style="width: 100%; font-size: 1.2rem;">Увійти на робоче місце</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/staff-login.js"></script>
+</body>
+</html>

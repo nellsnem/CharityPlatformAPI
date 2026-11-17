@@ -1,0 +1,438 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Neucha&family=Nunito:wght@400;600;700&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    background: repeating-linear-gradient(90deg, #c7c0aa, #c7c0aa 40px, #a3bac6 40px, #a3bac6 80px);
+    font-family: 'Nunito', sans-serif;
+    color: #3b2a1a;
+}
+
+h1, h2, h3, a, .btn-simple {
+    font-family: 'Neucha', cursive;
+}
+
+.top-border {
+    height: 15px;
+    background: repeating-linear-gradient(90deg, #d34c3d, #d34c3d 15px, #fbf3db 15px, #fbf3db 30px);
+}
+
+nav {
+    background-color: #fbf3db;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+    nav h1 {
+        margin: 0;
+        font-size: 2.2rem;
+        color: #d34c3d;
+    }
+
+    nav a {
+        text-decoration: none;
+        color: #3b2a1a;
+        font-size: 1.5rem;
+        margin-left: 30px;
+        display: inline-block;
+    }
+
+.btn-nav {
+    border: 2px solid #3b2a1a;
+    padding: 2px 15px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    font-family: 'Neucha', cursive;
+}
+
+    .btn-nav:hover {
+        background-color: #3b2a1a;
+        color: #fbf3db;
+    }
+
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.page-title {
+    text-align: center;
+    font-size: 3rem;
+    background-color: #fbf3db;
+    display: inline-block;
+    padding: 10px 30px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+    box-shadow: 2px 2px 0px #3b2a1a;
+}
+
+/* --- СІТКА КАРТОК (index.html) --- */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+}
+
+.project-card {
+    background-color: #fbf3db;
+    border: 2px solid #3b2a1a;
+    border-radius: 8px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 4px 0px #3b2a1a;
+    transition: transform 0.2s;
+}
+
+    .project-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .project-card h3 {
+        margin: 0 0 15px 0;
+        font-size: 1.8rem;
+        line-height: 1.2;
+    }
+
+.project-desc {
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.status-text {
+    font-weight: 700;
+    color: #276345;
+    margin-bottom: 10px;
+}
+
+.progress-bg {
+    width: 100%;
+    height: 10px;
+    background-color: #e5dcc3;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #3b7a57;
+    border-radius: 5px;
+    transition: width 0.5s ease-in-out;
+}
+
+.progress-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.btn-simple {
+    display: block;
+    width: 100%;
+    border: 2px solid #3b2a1a;
+    padding: 10px;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: all 0.2s;
+    border-radius: 4px;
+}
+
+    .btn-simple:hover {
+        background-color: #3b2a1a;
+        color: #fbf3db;
+    }
+
+.loading-text {
+    text-align: center;
+    background-color: #fbf3db;
+    padding: 20px;
+    font-family: 'Neucha', cursive;
+    font-size: 1.5rem;
+}
+
+/* --- СТОРІНКА АВТОРИЗАЦІЇ (auth.html) --- */
+.auth-wrapper {
+    display: flex;
+    background-color: #fbf3db;
+    border: 2px solid #3b2a1a;
+    border-radius: 8px;
+    box-shadow: 6px 6px 0px #3b2a1a;
+    margin: 40px auto;
+    max-width: 900px;
+    overflow: hidden;
+}
+
+.auth-section {
+    flex: 1;
+    padding: 40px;
+}
+
+.auth-divider {
+    width: 2px;
+    background-color: #3b2a1a;
+}
+
+.auth-section h2 {
+    font-size: 2.5rem;
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.auth-section p {
+    font-size: 0.95rem;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+    .form-group label {
+        display: block;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #3b2a1a;
+        border-radius: 4px;
+        background-color: transparent;
+        font-family: 'Nunito', sans-serif;
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+
+        .form-group input:focus {
+            outline: none;
+            background-color: #fff;
+        }
+
+.btn-primary {
+    background-color: #3b7a57;
+    color: #fbf3db;
+    border-color: #3b2a1a;
+}
+
+    .btn-primary:hover {
+        background-color: #276345;
+        color: #fff;
+    }
+
+.error-message {
+    color: #d34c3d;
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    min-height: 20px;
+}
+
+.success-message {
+    color: #3b7a57;
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    min-height: 20px;
+}
+
+
+/* --- ОСОБИСТИЙ КАБІНЕТ (profile.html) --- */
+.profile-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.user-info {
+    background-color: #fbf3db;
+    border: 2px solid #3b2a1a;
+    border-radius: 8px;
+    padding: 15px 30px;
+    display: inline-block;
+    box-shadow: 4px 4px 0px #3b2a1a;
+    font-size: 1.2rem;
+    text-align: left;
+}
+
+    .user-info p {
+        margin: 5px 0;
+    }
+
+.role-selector {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.role-card {
+    background-color: #fbf3db;
+    border: 2px solid #3b2a1a;
+    border-radius: 8px;
+    padding: 25px;
+    width: 300px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 4px 4px 0px #3b2a1a;
+    transition: all 0.2s;
+}
+
+    .role-card:hover {
+        transform: translateY(-5px);
+        background-color: #e5dcc3;
+    }
+
+    .role-card.active {
+        background-color: #3b2a1a;
+        color: #fbf3db;
+    }
+
+.hidden-panel {
+    display: none;
+    background-color: #fbf3db;
+    border: 2px solid #3b2a1a;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 6px 6px 0px #3b2a1a;
+    max-width: 700px;
+    margin: 0 auto 40px auto;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+    .hidden-panel h3 {
+        margin-top: 0;
+        font-size: 2rem;
+        border-bottom: 2px dashed #3b2a1a;
+        padding-bottom: 10px;
+    }
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #3b2a1a;
+    border-radius: 4px;
+    background-color: transparent;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+    textarea:focus {
+        outline: none;
+        background-color: #fff;
+    }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* --- КАБІНЕТ ВОЛОНТЕРА (Внутрішні блоки) --- */
+.dashboard-section {
+    margin-top: 25px;
+}
+
+    .dashboard-section h4 {
+        margin-bottom: 10px;
+        font-size: 1.4rem;
+        color: #276345;
+    }
+
+.retro-list {
+    list-style-type: square;
+    padding-left: 20px;
+    font-size: 1.1rem;
+    margin-top: 0;
+}
+
+    .retro-list li {
+        margin-bottom: 8px;
+        border-bottom: 1px dashed #c7c0aa;
+        padding-bottom: 5px;
+    }
+
+    .retro-list span {
+        font-weight: bold;
+        color: #d34c3d; 
+    }
+
+.retro-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background-color: #e5dcc3;
+    border: 2px solid #3b2a1a;
+}
+
+    .retro-table th, .retro-table td {
+        border: 2px solid #3b2a1a;
+        padding: 12px;
+        text-align: center;
+    }
+
+    .retro-table th {
+        background-color: #3b2a1a;
+        color: #fbf3db;
+        font-family: 'Neucha', cursive;
+        font-size: 1.3rem;
+    }
+
+    .retro-table .total-row {
+        background-color: #3b7a57;
+        color: #fbf3db;
+    }
+
+/* --- ДВОКОЛОНКОВИЙ МАКЕТ (Для профілю) --- */
+.split-layout {
+    display: flex;
+    gap: 40px; 
+    align-items: flex-start;
+}
+
+.split-column {
+    flex: 1;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+    .split-column .role-card,
+    .split-column .hidden-panel {
+        width: 100%;
+        max-width: none;
+        box-sizing: border-box;
+        margin: 0;
+    }
+
+/* --- СТИЛІ ДЛЯ ПОМИЛОК ПІД ПОЛЯМИ ВВОДУ --- */
+.field-error {
+    color: #d34c3d;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 5px;
+    display: none; 
+}
+
+.projects-grid p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-all;
+}

@@ -16,44 +16,113 @@ namespace CharityPlatformAPI.Controllers
             _context = context;
         }
 
+
         // СТВОРИТИ ТРАНЗАКЦІЮ 
         [HttpPost]
         public async Task<ActionResult> CreateTransaction(FinanceCreateDTO dto)
         {
-            var transaction = new FinanceTransaction
+            try
             {
-                ProjectId = dto.ProjectId,
-                ContractId = dto.ContractId,
-                EmployeeId = dto.EmployeeId,
-                Amount = dto.Amount,
-                Type = dto.Type,
-                Purpose = dto.Purpose,
-                TransactionDate = dto.TransactionDate
-            };
-
-            _context.FinanceTransactions.Add(transaction);
-            await _context.SaveChangesAsync();
-
-            if (dto.ProjectId.HasValue && dto.Type.ToLower() == "надходження")
-            {
-                var project = await _context.Projects.FindAsync(dto.ProjectId.Value);
-                if (project != null && project.Status != "завершено")
+                // 1. ПЕРЕВІРКА ПРОЄКТУ ТА СТАТУСУ ЗБОРУ
+                if (dto.ProjectId.HasValue)
                 {
-                    var totalIncome = await _context.FinanceTransactions
-                        .Where(t => t.ProjectId == dto.ProjectId.Value && t.Type.ToLower() == "надходження")
-                        .SumAsync(t => t.Amount);
-
-                    if (totalIncome >= project.ApprovedBudget)
+                    var project = await _context.Projects.FindAsync(dto.ProjectId.Value);
+                    if (project == null)
                     {
-                        project.Status = "зібрано"; 
+                        return BadRequest(new { message = $"Помилка: Проєкт з ID {dto.ProjectId.Value} не знайдено в базі." });
+                    }
 
-                        await _context.SaveChangesAsync();
-                        return Ok(new { message = $"Транзакцію додано! Бюджет зібрано. Проєкт перейшов у статус 'зібрано'." });
+                    if (dto.Type.ToLower() == "надходження" &&
+                        (project.Status.ToLower() == "зібрано" || project.Status.ToLower() == "завершено"))
+                    {
+                        return BadRequest(new { message = "Цей збір вже закрито! Дякуємо за підтримку, але ми більше не приймаємо донати на цей проєкт." });
                     }
                 }
-            }
 
-            return Ok(new { message = "Фінансову транзакцію успішно створено!" });
+                // 2. ПЕРЕВІРКА ПРАЦІВНИКА
+                if (dto.EmployeeId.HasValue)
+                {
+                    bool employeeExists = await _context.Employees.AnyAsync(e => e.EmployeeId == dto.EmployeeId.Value);
+                    if (!employeeExists)
+                    {
+                        return BadRequest(new { message = $"Помилка: Працівника з ID {dto.EmployeeId.Value} не існує." });
+                    }
+                }
+
+                // =======================================================
+                // 3. ЖОРСТКА ПЕРЕВІРКА ДОГОВОРУ (Статус + Ліміт Суми)
+                // =======================================================
+                if (dto.ContractId.HasValue)
+                {
+                    var contract = await _context.Contracts.FindAsync(dto.ContractId.Value);
+                    if (contract == null)
+                    {
+                        return BadRequest(new { message = $"Помилка: Договір з ID {dto.ContractId.Value} не знайдено в базі." });
+                    }
+
+                    // 3.1. Перевірка статусу договору
+                    if (contract.Status.ToLower() == "виконано" || contract.Status.ToLower() == "закрито")
+                    {
+                        return BadRequest(new { message = $"Помилка: Договір №{dto.ContractId.Value} вже виконано! Проводити нові платежі закритим договором заборонено." });
+                    }
+
+                    // 3.2. Перевірка на перевищення суми договору
+                    if (dto.Type.ToLower() == "витрата")
+                    {
+                        // Рахуємо, скільки ВЖЕ було заплачено по цьому договору
+                        var alreadyPaid = await _context.FinanceTransactions
+                            .Where(t => t.ContractId == dto.ContractId.Value && t.Type.ToLower() == "витрата")
+                            .SumAsync(t => t.Amount);
+
+                        // Якщо нова транзакція плюс те, що вже заплачено, перевищує суму договору
+                        if (alreadyPaid + dto.Amount > contract.Amount)
+                        {
+                            decimal remaining = contract.Amount - alreadyPaid;
+                            return BadRequest(new { message = $"Перевищення ліміту! Загальна сума договору №{dto.ContractId.Value} становить {contract.Amount} ₴. Вже сплачено: {alreadyPaid} ₴. Залишок до сплати: {remaining} ₴." });
+                        }
+                    }
+                }
+
+                // 4. ЗБЕРЕЖЕННЯ ТРАНЗАКЦІЇ
+                var transaction = new FinanceTransaction
+                {
+                    ProjectId = dto.ProjectId,
+                    ContractId = dto.ContractId,
+                    EmployeeId = dto.EmployeeId,
+                    Amount = dto.Amount,
+                    Type = dto.Type,
+                    Purpose = dto.Purpose,
+                    TransactionDate = dto.TransactionDate
+                };
+
+                _context.FinanceTransactions.Add(transaction);
+                await _context.SaveChangesAsync();
+
+                // 5. АВТОМАТИЧНЕ ОНОВЛЕННЯ СТАТУСУ ПРОЄКТУ 
+                if (dto.ProjectId.HasValue && dto.Type.ToLower() == "надходження")
+                {
+                    var project = await _context.Projects.FindAsync(dto.ProjectId.Value);
+                    if (project != null && project.Status != "завершено")
+                    {
+                        var totalIncome = await _context.FinanceTransactions
+                            .Where(t => t.ProjectId == dto.ProjectId.Value && t.Type.ToLower() == "надходження")
+                            .SumAsync(t => t.Amount);
+
+                        if (totalIncome >= project.ApprovedBudget)
+                        {
+                            project.Status = "зібрано";
+                            await _context.SaveChangesAsync();
+                            return Ok(new { message = "Транзакцію додано! Бюджет зібрано. Проєкт перейшов у статус 'зібрано'." });
+                        }
+                    }
+                }
+
+                return Ok(new { message = "Фінансову транзакцію успішно створено!" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Внутрішня помилка сервера: {ex.InnerException?.Message ?? ex.Message}" });
+            }
         }
 
         // ЗНАЙТИ ВСІ ТРАНЗАКЦІЇ
